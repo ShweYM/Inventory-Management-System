@@ -1,0 +1,85 @@
+﻿@{
+    ViewData["Title"] = "Disbursement Summary";
+    Layout = "_Layout";
+}
+@using Inventory_Management_System.Enums
+@model List<DisbursementForm>
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+
+</head>
+<body>
+<h1>Disbursement Summary</h1>
+<hr/>
+<h2>Pending Disbursement</h2>
+<div class="container mb-3 mt-3">
+    <table class="table table-striped table-bordered table-hover RFProducts">
+        <thead class="thead-dark">
+        <tr>
+            <th>Disbursement ID</th>
+            <th>Date of Delivery</th>
+            <th>Time of Delivery</th>
+            <th>Collection Point</th>
+            <th>DFStatus</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        @{
+            foreach (var disbursementForm in Model)
+            {
+                if (@disbursementForm.DFStatus == DFStatus.Created)
+                {
+                    <tr>
+                        <td>@disbursementForm.DFCode</td>
+                        <td>@disbursementForm.DFDeliveryDate</td>
+                        <td>@disbursementForm.DFDeliveryDate</td>
+                        <td>@disbursementForm.CollectionPoint.CollectionName</td>
+                        <td>@disbursementForm.DFStatus</td>
+                        <td>@Html.ActionLink("Details", "Details", "Disbursement", new { id = disbursementForm.Id})</td>
+                    </tr>
+                }
+            }
+        }
+        </tbody>
+    </table>
+</div>
+<h2>Disbursement Summary</h2>
+<div class="container mb-3 mt-3">
+    <table class="table table-striped table-bordered table-hover RFProducts">
+        <thead class="thead-dark">
+            <tr>
+                <th>Disbursement ID</th>
+                <th>Date of Delivery</th>
+                <th>Time of Delivery</th>
+                <th>Collection Point</th>
+                <th>DFStatus</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        @{
+            foreach (var disbursementForm in Model)
+            {
+                    <tr>
+                        <td>@disbursementForm.DFCode</td>
+                        <td>@disbursementForm.DFDeliveryDate</td>
+                        <td>@disbursementForm.DFDeliveryDate</td>
+                        <td>@disbursementForm.CollectionPoint.CollectionName</td>
+                        <td>@disbursementForm.DFStatus</td>
+                        <td>@Html.ActionLink("Details", "Details", "Disbursement", new { id = disbursementForm.Id })</td>
+                    </tr>
+            }
+        }
+        </tbody>
+    </table>
+</div>
+</body>
+</html>

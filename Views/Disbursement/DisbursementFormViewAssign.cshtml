@@ -1,0 +1,208 @@
+﻿@{ ViewData["Title"] = "Disbursement Form";
+    Layout = "_Layout"; }
+@model Inventory_Management_System.ViewModels.DisbursementViewModel
+@{
+    var df = Model.disbursementForm;
+    var dfrfList = Model.DisbursementFormRequisitionForms;
+    var dfpList = Model.DisbursementFormProducts;
+    var dfrfpList = Model.DisbursementFormRequisitionFormProducts;
+    var emp = Model.employee;
+}
+
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css">
+    <link rel="stylesheet" href="../../../css/demo_1/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+}
+<h1>Disbursement Form Assignment</h1>
+<!--AddedByHTP-->
+<!--Info of clerk/text fields-->
+<div class="col-12 grid-margin">
+    <div class="card-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Store Clerk</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.StoreClerk.Firstname @df.StoreClerk.Lastname</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Department </label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DeptRep.Department</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Disbursement No</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFCode</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @*<div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Collection Point</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DeptRep.Department.CollectionPoint</p>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Disbursement Form Status</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFStatus</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Delivery Date and Time</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFDeliveryDate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Disbursement Product Summary</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered mt-3" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Product Name</th>
+                            <th>Quantity Requested</th>
+                            <th>Quantity Received</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dfpList.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>@dfpList[i].Product.ProductName</td>
+                                    <td>@dfpList[i].ProductToDeliverTotal</td>
+                                    <td>@dfpList[i].ProductDeliveredTotal</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Disbursement Form Distribution</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered mt-3" style="width: 100%">
+                    <thead>
+                        <tr>
+                            <th>S.No</th>
+                            <th>Requisition No</th>
+                            <th>Product Name</th>
+                            <th>Quantity Approved</th>
+                            <th>Quantity Collected To Date</th>
+                            <th>Quantity To Delivered</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dfrfpList.Count; i++)
+                            {
+                                <tr>
+                                    <td class="dfrfpupdate" data-dfrfpid="@dfrfpList[i].Id">@(i+1)</td>
+                                    <td>@dfrfpList[i].RequisitionFormsProduct.RequisitionForm.RFCode</td>
+                                    <td>@dfrfpList[i].RequisitionFormsProduct.Product.ProductName</td>
+                                    <td>@dfrfpList[i].RequisitionFormsProduct.ProductApproved</td>
+                                    <td>@dfrfpList[i].RequisitionFormsProduct.ProductCollectedTotal</td>
+                                    <td><input id="qtyToAssign_@dfrfpList[i].Id" value="@dfrfpList[i].ProductCollected" /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <input type="submit" onclick="ConfirmAssignDFRFP()" />
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section scripts{
+    <script>
+        function ConfirmAssignDFRFP() {
+
+            var model = @Html.Raw(Json.Serialize(Model));
+            var dVModel;
+            var dfrfpList = [];
+            $('.dfrfpupdate').each(function () {
+                var id = $(this).attr('data-dfrfpid');
+                var qty = $("#qtyToAssign_" + id).val();
+
+                for (var i = 0; i < model.disbursementFormRequisitionFormProducts.length; i++)
+                {
+                    var dfrfp = model.disbursementFormRequisitionFormProducts[i];
+                    if (dfrfp.id == id)
+                    {
+                        dfrfp.productCollected = qty;
+                        dfrfpList.push(dfrfp);
+                    }
+                }
+            });
+
+
+            dVModel = {
+                "disbursementForm": model.disbursementForm,
+                "DisbursementFormRequisitionFormProducts": dfrfpList,
+                "employee": model.employee,
+                "DisbursementFormProducts": model.disbursementFormProducts,
+                "DisbursementFormRequisitionForms": model.disbursementFormRequisitionForms
+            };
+
+            //console.log(SRviewModel);
+            $.ajax({
+                type: "POST",
+                url: "/df/transactionassigncomplete",
+                data: JSON.stringify(dVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                 success: function (result) {
+                     if (result.success == "Success") {
+                         alert("Success");
+                          location.href = "/df/summary";
+                     }
+                     else {
+                         alert("Fail");
+                     }
+                }
+
+            });
+        }
+    </script>
+}

@@ -1,0 +1,51 @@
+﻿Id,Username,Email,Firstname,Lastname,Password,PhoneNumber,DeptRep,SupervisedById,EmployeeType,Department,TemporaryHead
+1,yanbin,silentxtwilight2@gmail.com,Yanbin,Zhong,1234,45796700,,2,Employee,Management Department,
+2,yamone,silentxtwilight2@gmail.com,Shwe,Yamone,1234,62733492,,0,Department Head,Management Department,
+3,thinn2,silentxtwilight2@gmail.com,Hlaing2,Thinn2,1234,62865817,,4,Employee,Science Department,Temporary Department Head
+4,darellmgr2,silentxtwilight2@gmail.com,Khiong Kiat1,Chua,1234,44939331,,0,Department Head,Science Department,
+5,thinn,silentxtwilight2@gmail.com,Hlaing,Thinn,1234,52383032,,4,Employee,Science Department,
+6,arjun,silentxtwilight2@gmail.com,Arjun,Chirumalle,1234,61662774,,4,Department Representative,Science Department,
+7,xinqi,silentxtwilight2@gmail.com,Xin Qi,li,1234,72763551,,8,Warehouse Packer,Store,
+8,rohan,rohanmhatre@gmail.com,Rohan,Mhatre,1234,99991837,,0,Store Manager,Store,
+9,sheryl,sherylteo@u.nus.edu,Sheryl,Teo,1234,79546947,,8,Store Supervisor,Store,
+10,darell,silentxtwilight2@gmail.com,Khiong Kiat,Chua,1234,91292683,,8,Store Clerk,Store,
+11,d1et,darellchua2@gmail.com,testF d1et,testL d1et,1234,73587563,,13,Employee,English Department,Temporary Department Head
+12,d1h,darellchua2@gmail.com,testF d1h,testL d1h,1234,47358610,,0,Department Head,English Department,
+13,d1r,darellchua2@gmail.com,testF d1r,testL d1r,1234,49967055,,13,Department Representative,English Department,
+14,d1e,darellchua2@gmail.com,testF d1e,testL d1e,1234,30247994,,13,Employee,English Department,
+15,d2et,darellchua2@gmail.com,testF d2et,testL d2et,1234,53889969,,16,Employee,Chinese Department,Temporary Department Head
+16,d2h,darellchua2@gmail.com,testF d2h,testL d2h,1234,79671555,,0,Department Head,Chinese Department,
+17,d2r,darellchua2@gmail.com,testF d2r,testL d2r,1234,23301370,,16,Department Representative,Chinese Department,
+18,d2e,darellchua2@gmail.com,testF d2e,testL d2e,1234,18486195,,16,Employee,Chinese Department,
+19,d3et,darellchua2@gmail.com,testF d3et,testL d3et,1234,45088915,,20,Employee,Engineering Department,Temporary Department Head
+20,d3h,darellchua2@gmail.com,testF d3h,testL d3h,1234,47735944,,0,Department Head,Engineering Department,
+21,d3r,darellchua2@gmail.com,testF d3r,testL d3r,1234,83785992,,20,Department Representative,Engineering Department,
+22,d3e,darellchua2@gmail.com,testF d3e,testL d3e,1234,50843615,,20,Employee,Engineering Department,
+23,d4et,darellchua2@gmail.com,testF d4et,testL d4et,1234,18698394,,24,Employee,Arts Department,Temporary Department Head
+24,d4h,darellchua2@gmail.com,testF d4h,testL d4h,1234,30224955,,0,Department Head,Arts Department,
+25,d4r,darellchua2@gmail.com,testF d4r,testL d4r,1234,40486641,,24,Department Representative,Arts Department,
+26,d4e,darellchua2@gmail.com,testF d4e,testL d4e,1234,28486759,,24,Employee,Arts Department,
+27,d5et,darellchua2@gmail.com,testF d5et,testL d5et,1234,16902531,,28,Employee,Business Department,Temporary Department Head
+28,d5h,darellchua2@gmail.com,testF d5h,testL d5h,1234,43956320,,0,Department Head,Business Department,
+29,d5r,darellchua2@gmail.com,testF d5r,testL d5r,1234,98866697,,28,Department Representative,Business Department,
+30,d5e,darellchua2@gmail.com,testF d5et,testL d5et,1234,26730275,,28,Employee,Business Department,
+31,d6et,darellchua2@gmail.com,testF d6et,testL d6et,1234,48805214,,32,Employee,Science Department,
+32,d6h,darellchua2@gmail.com,testF d6h,testL d6h,1234,90993410,,0,Department Head,Science Department,
+33,d6r,darellchua2@gmail.com,testF d6e2,testL d6e2,1234,55365590,,32,Employee,Science Department,
+34,d6e,darellchua2@gmail.com,testF d6e,testL d6e,1234,78242532,,32,Employee,Science Department,
+35,d7et,darellchua2@gmail.com,testF d7et,testL d7et,1234,60967910,,36,Employee,Management Department,Temporary Department Head
+36,d7h,darellchua2@gmail.com,testF d7h,testL d7h,1234,89719833,,0,Department Head,Management Department,
+37,d7r,darellchua2@gmail.com,testF d7r,testL d7r,1234,50196398,,36,Department Representative,Management Department,
+38,d7e,darellchua2@gmail.com,testF d7e,testL d7e,1234,75936847,,36,Employee,Management Department,
+39,d8et,darellchua2@gmail.com,testF d8et,testL d8et,1234,79983397,,40,Employee,HQ Department,Temporary Department Head
+40,d8h,darellchua2@gmail.com,testF d8h,testL d8h,1234,95865859,,0,Department Head,HQ Department,
+41,d8r,darellchua2@gmail.com,testF d8r,testL d8r,1234,66563395,,40,Department Representative,HQ Department,
+42,d8e,darellchua2@gmail.com,testF d8e,testL d8e,1234,84582308,,40,Employee,HQ Department,
+43,d9et,darellchua2@gmail.com,testF d9et,testL d9et,1234,44197600,,44,Employee,Music Department,Temporary Department Head
+44,d9h,darellchua2@gmail.com,testF d9h,testL d9h,1234,84823839,,0,Department Head,Music Department,
+45,d9r,darellchua2@gmail.com,testF d9r,testL d9r,1234,77553606,,44,Department Representative,Music Department,
+46,d9e,darellchua2@gmail.com,testF d9e,testL d9e,1234,49057206,,44,Employee,Music Department,
+47,dswp,darellchua2@gmail.com,testF dsw,testL dsw,1234,13460056,,48,Warehouse Packer,Store,
+48,dsm,darellchua2@gmail.com,testF dsm,testL dsm,1234,96571755,,0,Store Manager,Store,
+49,dss,darellchua2@gmail.com,testF dss,testL dss,1234,67176032,,48,Store Supervisor,Store,
+50,dsc,darellchua2@gmail.com,testF dsc,testL dsc,1234,25354558,,48,Store Clerk,Store,

@@ -1,0 +1,43 @@
+﻿@model Inventory_Management_System.ViewModels.RequisitionStationaryViewModel
+
+@{ 
+    var srpList = @Model.srpList;
+
+}
+
+    <table class="table table-bordered mt-3" id="producttable">
+        <thead>
+            <tr>
+                <th> Product Name</th>
+                <th> Total Quantity Approved </th>
+                <th> Total Quantity Pending for Collection </th>
+                <th> Warehouse Stock Available </th>
+
+            </tr>
+
+        </thead>
+
+        <tbody>
+            @foreach (var item in srpList)
+            {
+            <tr>
+                <td class="productname" data-productname="@item.Product.ProductName">@item.Product.ProductName</td>
+                <td class="productapprovedqty" data-qty="@item.ProductApprovedCount">@item.ProductApprovedCount</td>
+                <td class="productqty" data-qty="@item.ProductCount">@item.ProductCount</td>
+                <td>@item.Product.InventoryQuantity</td>
+            </tr>
+            }
+
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4"><label for="comments">Reason (if any) :</label></td>
+            </tr>
+            <tr>
+                <td colspan="4"><textarea class="form-control" id="comments" rows="4" required></textarea></td>
+            </tr>
+        </tfoot>
+    </table>
+
+<button type="button" class="btn btn-primary" onclick="CreateSRF()">Create</button>
+<button type="button" class="btn btn-danger" onclick="CanelSRF()">Cancel</button>

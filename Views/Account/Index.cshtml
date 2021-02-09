@@ -1,0 +1,123 @@
+﻿@model Inventory_Management_System.Models.Employee;
+@{
+    Layout = "_Layout";
+}
+
+<head>
+    <title>Sorting Tables w/ JavaScript</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<h1>Account Settings</h1>
+
+<div class="container mb-3 mt-3" id="account">
+    <form id="accountForm">
+        <table class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <thead>
+
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ID: </td>
+                    <td><input type="hidden" id="id" name="id" /><br /></td>
+                </tr>
+                <tr>
+                    <td>Username: </td>
+                    <td><input type="text" id="username" name="username" value="@Model.Username" /><br /></td>
+                </tr>
+                <tr>
+                    <td>Email: </td>
+                    <td><input type="email" id="email" class="email" name="email" value="@Model.Email" /><br /></td>
+                </tr>
+                <tr>
+                    <td>First Name: </td>
+                    <td><input type="text" id="fname" name="fname" value="@Model.Firstname" readonly /><br /></td>
+                </tr>
+                <tr>
+                    <td>Last Name: </td>
+                    <td><input type="text" id="lname" name="lname" value="@Model.Lastname" readonly /><br /></td>
+                </tr>
+                <tr>
+                    <td>Phone Number: </td>
+                    <td><input type="text" id="phonenum" class="phonenum" name="phonenum" value="@Model.PhoneNumber" /><br /></td>
+                </tr>
+                <tr>
+                    <td>Department Rep: </td>
+                    <td><input type="text" id="deptrep" name="deptrep" value="@Model.DeptRep" readonly /><br /></td>
+                </tr>
+                <tr>
+                    <td>Supervised By: </td>
+                    <td><input type="text" id="deptrep" name="deptrep" value="@Model.DeptRep" readonly /><br /></td>
+                </tr>
+                <tr>
+                    <td>Employee Type: </td>
+                    <td><input type="text" id="emptype" name="emptype" value="@Model.EmployeeType.EmployeeTypeName" /><br /></td>
+                </tr>
+                <tr>
+                    <td><input type="submit" class="btn btn-danger" id="cancel" value="Cancel"></td>
+                    <td><input type="submit" class="btn btn-primary" id="update" onclick="updateAccount()" value="Update"></td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>
+
+@section scripts{
+
+    <script>
+
+        function updateAccount() {
+            var email = ""
+            var phonenum = ""
+
+            $('.email').each(function () {
+                //var id = $(this).attr('data-pid');
+                //alert(id);
+                email.push($(this).val());
+            });
+
+            $('.phonenum').each(function () {
+                //var id = $(this).attr('data-pid');
+                //alert(id);
+                phonenum.push($(this).val());
+            });
+
+            //alert(productlist);
+            //alert(productquantitylist);
+
+
+
+            $.ajax({
+
+                cache: false,
+                url: '/account/save',
+                type: "Post",
+                data: { phonenum: phonenum, email: email },
+                beforeSend: function () {
+
+                },
+                success: function (result) {
+                    if (result.success == "Success") {
+                        location.href = "../Home/Dashboard";
+                    }
+                    else {
+                        alert("fail");
+                    }
+                },
+                complete: function () {
+
+                }
+            });
+
+
+        }
+
+
+
+
+
+    </script>
+}

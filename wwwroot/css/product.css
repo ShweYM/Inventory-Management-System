@@ -1,0 +1,83 @@
+﻿
+
+h1 {
+    padding-left: 50px;
+    float:left;
+}
+.searchbox {
+    float: right;
+    padding-top: 20px;
+    padding-left: 20px;
+    height: auto;
+    
+}
+
+.searchbox input[type=text] {
+    float: right;
+    padding: 6px;
+    margin-top: 8px;
+    margin-right: 16px;
+    margin-left: 15px;
+    font-size: 17px;
+}
+.products {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.product-card {
+    padding: 2%;
+    flex-grow: 1;
+    flex-basis: 16%;
+    display: flex; /* so child elements can use flexbox stuff too! */
+}
+#product-card {
+    max-width: 1200px;
+    margin: 0 auto;
+    overflow: auto;
+    width: 30%;
+}
+
+    #product-card::after {
+        content: "";
+        clear: both;
+        display: table;
+    }
+
+div.product-card {
+    float: left;
+    width: 15%;
+}
+
+div.product-card-in {
+    box-sizing: border-box;
+    margin: 5px;
+    padding: 10px;
+    width: 200px;
+    height: auto;
+    border: 1px solid #f2dcdc;
+    background: #f9f9f9;
+    padding-bottom: 5px;
+}
+
+img.product-image {
+    width: 150px;
+    height: 150px;
+}
+
+div.product-name {
+    font-weight: bold;
+    font-size: 1em;
+}
+@media only screen and (max-width: 1024px) {
+    div.product-card {
+        width: 33%;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    div.product-card {
+        width: 50%;
+    }
+}

@@ -1,0 +1,133 @@
+﻿@model Inventory_Management_System.ViewModels.PODOViewModel;
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Purchase Order Summary";
+    var poListIssued = Model.poListIssued;
+    var doListNotCompleted = Model.doListNotCompleted;
+    var doListCompleted = Model.doListCompleted;
+    var poListCompleted = Model.poListCompleted;
+    var poListNotCompleted = Model.poListNotCompleted;
+    var emp = Model.Employee;
+}
+
+
+<h1>@ViewData["Title"]</h1>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Create Requisition Form</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th> S/N</th>
+                            <th> Handled By</th>
+                            <th> Purchase Order </th>
+                            <th> Expected Delivery Date</th>
+                            <th> Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < poListIssued.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>  @poListIssued[i].IssuedBy.Firstname @poListIssued[i].IssuedBy.Lastname</td>
+                                    <td><a href='/po/@poListIssued[i].Id'>@poListIssued[i].POCode</a> </td> 
+                                    <td>@poListIssued[i].expectedDeliveryDate</td>
+                                    <td> @poListIssued[i].POIssueDate</td>
+                                </tr>
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Purchase Orders(Not Completed)</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th> S/N</th>
+                            <th> Handled By</th>
+                            <th> Purchase Order </th>
+                            <th> Expected Delivery Date</th>
+                            <th> Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < poListNotCompleted.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td> @poListNotCompleted[i].IssuedBy.Firstname @poListNotCompleted[i].IssuedBy.Lastname</td>
+                                    <td><a href='/po/@poListNotCompleted[i].Id'>@poListNotCompleted[i].POCode</a> </td> 
+                                    <td>@poListNotCompleted[i].expectedDeliveryDate</td>
+                                    <td> @poListNotCompleted[i].POIssueDate</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Purchase Orders(Completed)</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th> S/N</th>
+                            <th> Handled By</th>
+                            <th> Purchase Order </th>
+                            <th> Expected Delivery Date</th>
+                            <th> Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < poListCompleted.Count; i++)
+
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>  @poListCompleted[i].IssuedBy.Firstname @poListCompleted[i].IssuedBy.Lastname</td>
+                                    <td><a href='/po/@poListCompleted[i].Id'>@poListCompleted[i].POCode</a> </td> 
+                                    <td>@poListCompleted[i].expectedDeliveryDate</td>
+                                    <td> @poListCompleted[i].POIssueDate</td>
+                                </tr>
+                            }
+
+                        }
+                    </tbody>
+
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css" />
+    <link rel="stylesheet" href="../../../css/demo_1/style.css" />
+}

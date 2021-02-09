@@ -1,0 +1,201 @@
+﻿@{
+    ViewData["Title"] = "Delivery Order Form - Update (To Confirm DO)";
+    Layout = "_Layout";
+}
+@model Inventory_Management_System.ViewModels.PODOViewModel
+@{ 
+    var _do = Model.DO;
+    var dospList = Model.dosrList;
+    var emp = Model.Employee;
+}
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+    <h1>@ViewData["Title"]</h1>
+
+    <div class="col-12 grid-margin">
+
+        <div class="card-body">
+
+            <form class="form-sample">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">@_do.ReceivedBy.EmployeeType.EmployeeTypeName:</label>
+                            <div class="col-sm-9">
+                                <p class="col-form-label">@_do.ReceivedBy.Firstname @_do.ReceivedBy.Lastname</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">DO Date:</label>
+                            <div class="col-sm-9">
+                                <p class="col-form-label">@_do.DOReceivedDate</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Delivery Order Code</label>
+                            <div class="col-sm-9">
+                                <p class="col-form-label">@_do.DOCode</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">PO No: </label>
+                            <div class="col-sm-9">
+                                <p class="col-form-label">@_do.PurchaseOrder.POCode</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">PO Status: </label>
+                            <div class="col-sm-9">
+                                <p class="col-form-label">@_do.PurchaseOrder.POStatus</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">DO Status: </label>
+                            <div class="col-sm-9">
+                                <p class="col-form-label">@_do.DOStatus</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group row">
+                            <label class="col-sm-3 col-form-label">Supplier's DO No: </label>
+                            <div class="col-sm-9">
+                                <p class="col-form-label"><input type="text" id="doNo"/></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="col-12 grid-margin">
+
+        <div class="card-body">
+            <form class="form-sample">
+                <div class="col-lg-12 grid-margin stretch-card">
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 class="card-title">Pending Stationery Assignment</h4>
+                            <div class="table-vertical-scroll">
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th> S/N </th>
+                                            <th> Product Name</th>
+                                            <th> Quantity Ordered </th>
+                                            <th> Quantity Received </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @{
+                                            for (int i = 0; i < dospList.Count; i++)
+                                            {
+                                                <tr>
+                                                    <td class="doupdate" data-doid="@dospList[i].Id">@(i+1)</td>
+                                                    <td>@dospList[i].PurchaseOrderSupplierProduct.SupplierProduct.Product.ProductName</td>
+                                                    <td>@dospList[i].PurchaseOrderSupplierProduct.POQuantityRequested</td>
+                                                    <td><input type="number" required id="doqr_@dospList[i].Id" min = 0 max=@dospList[i].DOQuantityReceived placeholder="@dospList[i].DOQuantityReceived" value="@dospList[i].DOQuantityReceived"/></td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <button type="button" onclick="SubmitDO()">Confirm DO Received</button>
+
+            </form>
+        </div>
+    </div>
+
+
+
+
+</body>
+
+</html>
+
+@section scripts{
+<script>
+    
+        
+    
+        function SubmitDO() {
+
+            var productlist = [];
+            var model = @Html.Raw(Json.Serialize(Model));
+            var pdVModel;
+            var dospList = [];
+            var comment = $("#comment").val();
+            var deliveryOrder = model.do;
+            var doNo = $("#doNo").val();
+            deliveryOrder.deliveryOrderNo = doNo;
+
+
+            $('.doupdate').each(function () {
+                var dosp = {};
+                var id = $(this).attr('data-doid');
+                var qty = $("#doqr_" + id).val();
+                dosp.Id = id;
+                dosp.DOQuantityReceived = qty;
+                dospList.push(dosp);
+            });
+
+            pdVModel = { "employee": model.employee, "dosrList": dospList, "DO": deliveryOrder };
+
+
+            $.ajax({
+                type: "POST",
+                url: "/do/save/" + @Model.DO.Id,
+                data: JSON.stringify(pdVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r.success == "Success") {
+                        location.href = "/podo/summary";
+                    }
+                    else {
+                        alert("Please check your values");
+
+                    }
+                }
+            });
+        }
+</script>
+}

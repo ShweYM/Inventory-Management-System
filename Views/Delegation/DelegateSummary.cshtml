@@ -1,0 +1,83 @@
+﻿@model Inventory_Management_System.ViewModels.DelegationViewModel
+
+@{ 
+    ViewData["Title"] = "Delegation Summary";
+    Layout = "_Layout"; 
+    }
+@{
+    var empType = Model.employee.EmployeeType.EmployeeTypeName;
+    var emp = Model.employee;
+    var deptHead = Model.DepartmentHead;
+    var delegateList = Model.delegationList;
+
+}
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+    <h1>Delegation Summary</h1>
+
+    <table id="delegationTbl" class="table table-bordered mt-3" style="width: 100%">
+        <thead>
+            <tr>
+                <td>S/N</td>
+                <th>Dept Head</th>
+                <th>Delegatee</th>
+                <th>Delegate Type</th>
+                <th>Assigned Date</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Comments</th>
+
+                @{
+                    if (empType == "Department Head")
+                    {
+                        <th>Action</th>
+                    }
+                    else
+                    {
+                        <th>Status</th>
+                    }
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @{ for (int i = 0; i < delegateList.Count; i++)
+                {
+                        <tr class="delegation">
+                            <td>@(i + 1)</td>
+                            <td>@delegateList[i].DepartmentHead.Firstname  @delegateList[i].DepartmentHead.Lastname</td>
+                            <td>@delegateList[i].Delegatee.Firstname @delegateList[i].Delegatee.Lastname</td>
+                            <td><a href="/dl/@delegateList[i].Id">@delegateList[i].DelegatedType.EmployeeTypeName</a></td>
+                            <td>@delegateList[i].DLAssignedDate.ToString("dd/MM/yyyy")</td>
+                            @{
+                                if (delegateList[i].DelegatedType.EmployeeTypeName == "Temporary Department Head")
+                                {
+                                    <td>@delegateList[i].startDate.Date.ToString("dd/MM/yyyy")</td>
+                                    <td>@delegateList[i].endDate.Date.ToString("dd/MM/yyyy")</td>
+                                }
+                                else
+                                {
+                                    <td></td>
+                                    <td></td>
+                                }
+
+                            }
+                            <td>@delegateList[i].delegateComment</td>
+                            
+                            <td>@delegateList[i].DLStatus.ToString()</td>
+
+                        </tr>
+                }
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>

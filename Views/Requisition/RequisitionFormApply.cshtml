@@ -1,0 +1,118 @@
+﻿@{
+    ViewData["Title"] = "Requisition Form";
+    Layout = "_Layout";
+}
+@model Inventory_Management_System.ViewModels.RequisitionViewModel
+
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+    <h1>Requisition Form</h1>
+
+    <!--Info of clerk/text fields-->
+    <div>
+        <form id="productForm">
+            <table id="productTbl" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Selection</th>
+                        <th>Product Name</th>
+                        <th>Units of Measure</th>
+                        <th>Quantity to Request</th>
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var product in Model.productList)
+                        {
+                            <tr class="product">
+                                <td>
+                                    <input type="checkbox" name="pid" class="productselect" data-pid="@product.Id" value="@product.Id">
+                                </td>
+                                <td id="productname_@product.Id" name="productName" data-pname="@product.ProductName" value="@product.ProductName">@product.ProductName</td>
+                                <td id="unit_@product.Id">@product.Units</td>
+                                <td>
+                                    <input type="number" class="productquantity" name="productQuantity" id="product_@product.Id" min="1" />
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <label for="comments">Reason (if any) :</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="6">
+                            <textarea class="form-control" id="comments" rows="4" required></textarea>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <button type="button" id="submitRfBtn" onclick="ChooseProduct()" class="fadeIn fourth">Submit</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
+
+@section scripts{
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+    <script>
+
+        function ChooseProduct() {
+
+            var productlist = [];
+            var ObjList = [];
+            var products = new Array();
+            var model = @Html.Raw(Json.Serialize(Model));
+            var rfVModel;
+            var comments = $("#comments").val();
+
+            $('.productselect:checked').each(function () {
+                var id = $(this).attr('data-pid');
+                var qty = $("#product_" + id).val();
+                var unit = $("#unit_" + id).val();
+
+                for (var i = 0; i < model.productList.length; i++) {
+                    var product = model.productList[i];
+                    if (product.id == id) {
+                        product.Units = unit;
+                        product.productRequested = qty;
+                        productlist.push(product)
+                    }
+
+                }
+
+            });
+
+            rfVModel = { "employee": model.employee, "productList": productlist, "comment":comments };
+
+
+            $.ajax({
+                type: "POST",
+                url: "/rf/save",
+                data: JSON.stringify(rfVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    alert(r + " record(s) inserted.");
+                    location.href = "/rf/summary"
+                }
+            });
+        }
+    </script>
+}

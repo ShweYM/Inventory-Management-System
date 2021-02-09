@@ -1,0 +1,100 @@
+﻿@model Inventory_Management_System.ViewModels.DelegationViewModel;
+
+@{
+    Layout = "_Layout";
+    var empList = Model.DeptEmployeeList;
+    var deptHead = Model.DepartmentHead;
+    var emp = Model.employee;
+    ViewData["Title"] = "Delegate Department Representative";
+}
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+<body>
+
+
+<div>
+    <h4>@ViewData["Title"]</h4>
+    <div>
+        <div>
+            <table class="table table-bordered mt-3" style="width: 100%">
+                <tr>
+                    <td>Department Head Name: </td>
+                    <td>@deptHead.Firstname @deptHead.Lastname </td>
+                </tr>
+                <tr>
+                    <td>Assign Department Representative: </td>
+                    <td>
+                        <select class="deptrepselect" name="deptrepselect" id="deptrepselect">
+                            @foreach (var delegatee in empList)
+                            {
+                                <option id="delegatee_@delegatee.Id" value="@delegatee.Id">@delegatee.Firstname @delegatee.Lastname</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <label for="comments">Reason (if any) :</label>
+                            <textarea class="form-control" id="comments" rows="4" required></textarea>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><button type="button" id="submitBtn" class="fadeIn fourth" onclick="Delegate()" />Delegate</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+@section scripts{
+    <script>
+
+        function Delegate() {
+
+            var delegateeId = $("#deptrepselect").val();
+            var model = @Html.Raw(Json.Serialize(Model));
+            var dVModel;
+            var delegatee = {};
+            var comments = $("#comments").val();
+
+            delegatee.Id = delegateeId;
+            delegatee.delegateComment = comments;
+
+            dVModel = {
+                "employee": model.employee,
+                "delegatee": delegatee,
+                "delegateComment": comments
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/delegation/savedeptrep/",
+                data: JSON.stringify(dVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success == "Success") {
+                        alert("Success");
+                        location.href = "/delegation/summary";
+                    }
+                    else {
+                        alert("Fail");
+                    }
+                }
+
+            });
+        };
+    </script>
+}

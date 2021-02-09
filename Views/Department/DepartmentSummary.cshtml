@@ -1,0 +1,73 @@
+﻿@model Inventory_Management_System.ViewModels.DepartmentViewModel;
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Department Summary";
+    var dList = Model.deptList;
+    var emp = Model.employee;
+
+}
+<link rel="stylesheet" href="~/css/siteheaderfooter.css" />
+
+
+<h1>@ViewData["Title"]</h1>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Department Summary</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>Department Name</th>
+                            <th>Department Head</th>
+                            <th>Department Representative</th>
+                            <th>Office Contact</th>
+                            <th>CollectionPoint</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dList.Count; i++)
+                            {
+                                <tr>
+                                    <td>@dList[i].DepartmentName</td>
+                                    @{
+                                        if (dList[i].deptHead == null)
+                                        {
+                                            <td></td>
+                                        }
+                                        else
+                                        {
+                                            <td>@dList[i].deptHead.Firstname @dList[i].deptHead.Lastname</td>
+                                        }
+                                    }
+                                    @{
+                                        if (dList[i].deptRep == null)
+                                        {
+                                            <td></td>
+                                        }
+                                        else
+                                        {
+                                            <td>@dList[i].deptRep.Firstname @dList[i].deptRep.Lastname</td>
+                                        }
+                                    }
+                                    <td>@dList[i].PhoneNumber</td>
+                                    <td>@dList[i].CollectionPoint.CollectionName</td>
+                                </tr>
+
+                            }
+
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css" />
+    <link rel="stylesheet" href="../../../css/demo_1/style.css" />
+}

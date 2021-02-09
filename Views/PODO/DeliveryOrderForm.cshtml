@@ -1,0 +1,120 @@
+﻿@{
+    ViewData["Title"] = "Delivery Order Form";
+    Layout = "_Layout";
+}
+@model Inventory_Management_System.ViewModels.PODOViewModel
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+
+</head>
+<body>
+    <h1>Delivery Order Form</h1>
+
+    <div class="container">
+        @*<dl class="row">
+            <dt class="col-md-3">@Html.Label("Delivery Order No")</dt>
+            <dd class="col-md-3">@Html.DisplayFor(model => model.deliveryOrder.Id) 
+            <dd>
+            <dt class="col-md-3">@Html.Label("Supplier Name")</dt>
+            <dd class="col-md-3">@Html.DisplayFor(model => model.deliveryOrder.Supplier.SupplierName)</dd>
+        </dl>
+        <dl class="row">
+            <dt class="col-md-3">@Html.Label("Purchase Order No")</dt>
+            <dd class="col-md-3">@Html.DisplayFor(model => model.deliveryOrder.PurchaseOrder.Id)</dd>
+            <dt class="col-md-3">@Html.Label("Receiver Name")</dt>
+            <dt class="col-md-3">@Html.Label("Logic University")</dt>
+        </dl>
+        <dl>
+            <dt class="col-md-3">@Html.Label("Date Received")</dt>
+            <dd class="col-md-3">@Html.DisplayFor(model => model.deliveryOrder.DOReceivedDate.Date)</dd>
+        </dl>*@
+    </div>
+    <div>
+        <form id="deliveryOrderForm">
+            <table>
+                <thead>
+                <tr>
+                    <th></th>
+                    <th>Product Code</th>
+                    <th>Category</th>
+                    <th>Description</th>
+                    <th>Quantity Requested</th>
+                    <th>Quantity Received</th>
+                    <th>Sub Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                @*@{
+                    foreach (var product in Model.purchaseOrderSupplierProducts)
+                    {
+                        <tr class="product">
+                            <td><input type="checkbox" name="pid" class="productselect" data-pid="@product.Id" value="@product.Id"></td>
+                            <td>@product.product.ProductCode</td>
+                            <td>@product.product.ProductCategory.ProductCategoryName</td>
+                            <td>@product.product.ProductDescription</td>
+                            <td>>@product.quantityRequested</td>
+                            <td>@product.quantityReceived</td>
+                            <td>Sub Total</td>
+                        </tr>
+                    }
+                }*@
+                </tbody>
+                <tfoot>
+                <tr>
+                    <td colspan="4">
+                        <label for="comments">Reason (if any) :</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="4">
+                        <textarea class="form-control" id="comments" rows="4" required></textarea>
+                    </td>
+                </tr>
+                </tfoot>
+            </table>
+            <button type="button" id="submitDfBtn" action="do/summary" class="fadeIn fourth">Cancel</button>
+            <button type="button" id="submitDfBtn" onclick="Choose()" class="fadeIn fourth">Submit</button>
+        </form>
+    </div>
+</body>
+</html>
+
+@section scripts{
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
+    <script>
+
+        function ChooseProduct() {
+
+
+            @*            var model = @Html.Raw(Json.Serialize(Model));
+            var dVModel;
+            var deptrepid = $("#myselect option:selected").val();
+            var deptrep = model.AssignedDeptRep;
+            deptrep.Id = deptrepid;
+
+            dVModel = { "deptrep": deptrep };*@
+
+            $.ajax({
+                type: "POST",
+                url: "/do/save",
+                data: JSON.stringify(dVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function(r) {
+                    if (r.success == "Success") {
+                        location.href = "/do/summary";
+                    } else {
+                        alert("Please resubmit your requisition form");
+                    }
+                },
+            });
+        }
+    </script>
+}

@@ -1,0 +1,154 @@
+﻿@model Inventory_Management_System.ViewModels.RequisitionStationaryViewModel
+
+@{
+    ViewData["Title"] = "CreateStationaryRetrievalForm";
+    Layout = "_Layout";
+    var srpList = Model.srpList;
+    var rfList = Model.requisition;
+}
+
+
+@section styles{
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+}
+
+<div class="container">
+    <h3 class="mt-3">Create Stationary Retrieval Form</h3>
+
+    <div id="requisitiontb">
+        <table class="table table-bordered mt-3">
+            <thead>
+                <tr>
+                    <th> Id</th>
+                    <th> Requisition Number </th>
+                    <th> Requested By </th>
+                    <th> Date </th>
+                    <th> Status </th>
+
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var reqitem in @Model.requisition)
+                {
+                    <tr>
+                        <td>
+                            <div class="form-check form-check-flat">
+
+                                <input type="checkbox" name="rid" id="requisitonlist_id" class="form-check-input reqselect" data-reqid="@reqitem.Id" value="@reqitem.Id" onchange="checkboxvalidate()">  <i class="input-helper"></i>
+
+                            </div>
+                        </td>
+                        <td> @reqitem.RFCode </td>
+                        <td> @(reqitem.Employee.Firstname + " " + reqitem.Employee.Lastname)</td>
+                        <td> @reqitem.RFDate </td>
+                        <td> @reqitem.RFStatus </td>
+                    </tr>
+                }
+
+            </tbody>
+        </table>
+    </div>
+
+    <button type="button" class="btn btn-primary" id="chooseRequ" onclick="ChooseRequisition()" disabled>Choose Requistion</button>
+
+    <div id="div_reqAndwarehouse"></div>
+</div>
+
+
+@section scripts{
+    <script>
+
+        function checkboxvalidate() {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"]');
+            var checkedOne = Array.prototype.slice.call(checkboxes).some(x => x.checked);
+
+            document.getElementById("chooseRequ").disabled = true;
+            if (checkedOne) {
+                document.getElementById("chooseRequ").disabled = false;
+            }
+        }
+
+    requistionlist = [];
+    function ChooseRequisition() {
+
+        //requistionlist = [];
+
+         $('.reqselect:checked').each(function () {
+            var id = $(this).attr('data-reqid');
+            requistionlist.push($(this).attr("data-reqid"));
+
+         });
+
+        $.ajax({
+
+             cache: false,
+             url: '@Url.Action("GetTotalQtyFromRequisitions", "StationeryRetrieval")',
+            type: "Post",
+            data: { requistionlist: requistionlist },
+                beforeSend: function () {
+
+                },
+                success: function (result) {
+                    if (result != null) {
+                        $('#div_reqAndwarehouse').empty().append(result);
+                    }
+                    else {
+                        alert("Fail");
+                    }
+                },
+                complete: function () {
+
+                }
+            });
+        }
+
+        function CreateSRF() {
+
+            var productlist = [];
+            var srrfvm;
+            var model = @Html.Raw(Json.Serialize(Model));
+
+            $('#producttable tr').each(function (a,b) {
+                var productname = $('.productname', b).text();
+                var productapprovedqty = $('.productapprovedqty', b).text();
+                var productqty = $('.productqty', b).text();
+                var srpList = model.srpList;
+                if (productname != "" && productqty != "") {
+                    productlist.push({ productname: productname, productapprovedqty: productapprovedqty, productqty: productqty });
+                }
+            });
+            var comment = $("#comments").val();
+
+            console.log(productlist);
+            //srrfvm = { "requisition" : "", "reqAndWareHouseproduct" : "", "SRProduct" : productlist, "comment" : comment, "selectedrequisition" : requistionlist, "rfList":model.rfList };
+            srrfvm = {
+                "comment": comment,
+                "SRProduct": productlist,
+                "selectedrequisition": requistionlist,
+                "rfList": model.rfList,
+                "srpList": model.srpList,
+                "emp": model.emp
+            };
+
+             $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveToSRProduct", "StationeryRetrieval")',
+                data: JSON.stringify(srrfvm),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                 success: function (result) {
+                     if (result.success == "Success") {
+                         alert("Success");
+                         location.href = "/srf/summary"
+                     }
+                     else {
+                         alert("Fail");
+                     }
+                }
+
+            });
+
+        }
+
+    </script>
+}

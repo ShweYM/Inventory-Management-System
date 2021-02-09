@@ -1,0 +1,133 @@
+﻿@model Inventory_Management_System.ViewModels.StationeryRetrievalSummaryViewModel;
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Stationery Retrieval Summary";
+    var srOpenList = Model.pendingSROpens;
+    var srPendingList = Model.pendingSRAssignments;
+    var srCompletedList = Model.completedSRs;
+}
+
+    @section Styles{
+        <link rel="stylesheet" href="../../../css/shared/style.css"/>
+
+        <link rel="stylesheet" href="../../../css/demo_1/style.css"/>
+    }
+    <h1>@ViewData["Title"]</h1>
+    <input type="button" class="btn btn-primary" onclick="location.href='@Url.Action("CreateStationaryRetrievalForm","StationeryRetrieval")'" value="Create Stationery Retrieval"/>
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Pending Stationery Retrieval</h4>
+                <div class="table-vertical-scroll">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th> Id</th>
+                                <th> Stationery Retrieval Id </th>
+                                <th> Date </th>
+                                <th> Status </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                for(int i = 0; i < srOpenList.Count; i++)
+
+                                //foreach (var open in srOpenList)
+                                {
+                                    <tr>
+                                        <td>@(i+1)</td>
+                                        @*<td><a href='~/StationeryRetrieval/StationeryRetrievalForm?id=@srOpenList[i].Id'>@srOpenList[i].SRCode</a> </td>*@ 
+                                        <td><a href='/srf/open/@srOpenList[i].Id'>@srOpenList[i].SRCode</a> </td> 
+
+                                        <td> @srOpenList[i].SRDate</td>
+                                        <td> @srOpenList[i].SRStatus </td>
+                                    </tr>
+                                }
+
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Pending Stationery Assignment</h4>
+                <div class="table-vertical-scroll">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th> Id</th>
+                                <th> Stationery Retrieval Id </th>
+                                <th> Date </th>
+                                <th> Status </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                for(int i = 0; i < srPendingList.Count; i++)
+                                //foreach (var pending in srPendingList)
+                                {
+                                    <tr>
+                                        <td>@(i+1)</td>
+                                        <td><a href='/srf/assign/@srPendingList[i].Id'>@srPendingList[i].SRCode</a></td> <!--link to the SR details page by sending Id-->
+                                        <td> @srPendingList[i].SRDate</td>
+                                        <td> @srPendingList[i].SRStatus </td>
+                                    </tr>
+                                }
+
+                            }
+
+                        </tbody>
+                    </table>
+
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="col-lg-12 grid-margin stretch-card">
+        <div class="card">
+            <div class="card-body">
+                <h4 class="card-title">Completed Stationery Retrieval</h4>
+                <div class="table-vertical-scroll">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th> Id</th>
+                                <th> Stationery Retrieval Id </th>
+                                <th> Date </th>
+                                <th> Status </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @{
+                                for(int i = 0; i < srCompletedList.Count; i++)
+
+                                //foreach (var completed in srCompletedList)
+                                {
+                                    <tr>
+                                        <td>@(i + 1)</td>
+                                        <td><a href='/srf/@srCompletedList[i].Id'>@srCompletedList[i].SRCode</a> </td><!--link to the SR details page by sending Id-->
+                                        <td> @srCompletedList[i].SRDate</td>
+                                        <td> @srCompletedList[i].SRStatus </td>
+                                    </tr>
+                                }
+
+                            }
+                        </tbody>
+
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+

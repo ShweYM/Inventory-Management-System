@@ -1,0 +1,18 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model List<Department>
+
+@foreach (var dept in Model)
+{
+    if (dept.DepartmentName != "Store")
+    {
+
+        <input type="checkbox" name="deptid" id="dept_id" class="form-check-input dept_list" data-deptid="@dept.Id" value="@dept.DepartmentName">
+        @dept.DepartmentName
+
+    }
+}
+
+<button type="button" class="btn btn-primary" id="trendfordept" onclick="ViewTrendReqFormForDepts()">View Chart</button>

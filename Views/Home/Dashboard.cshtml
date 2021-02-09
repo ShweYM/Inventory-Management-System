@@ -1,0 +1,594 @@
+﻿@model Inventory_Management_System.ViewModels.DashboardViewModel;
+
+@{
+    ViewData["Title"] = "Dashboard";
+    Layout = "_Layout";
+    var emp = Model.emp;
+    var deptrep = Model.deptRep;
+    var empType = Model.emp.EmployeeType;
+    var cpList = Model.cpList;
+}
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css">
+    <link rel="stylesheet" href="../../../css/demo_1/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+}
+
+
+<body>
+
+    <div id="Dashboard">
+        <h1> @emp.EmployeeType.EmployeeTypeName Dashboard</h1>
+        <div class="card-body">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Employee Name: </label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label">@emp.Firstname @emp.Lastname</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Employee Type:</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label">@emp.EmployeeType.EmployeeTypeName</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Department: </label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label">@emp.Department.DepartmentName</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            @{
+                if (emp.Department.DepartmentName != "Store")
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Department Representative: </label>
+                                <div class="col-sm-9">
+                                    <p class="col-form-label">
+                                        @deptrep.Firstname @deptrep.Lastname
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+                if (emp.TempDeptHeadType != null)
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Secondary Title</label>
+                                <div class="col-sm-9">
+                                    <p class="col-form-label">@emp.TempDeptHeadType.EmployeeTypeName</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+                else if (emp.EmployeeType.EmployeeTypeName == "Department Representative")
+                {
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group row">
+                                <label class="col-sm-3 col-form-label">Collection Point: </label>
+                                <div class="col-sm-9">
+                                    <p class="col-form-label">@emp.Department.CollectionPoint.CollectionName <br />
+                                            <select class="collectionpointselect" name="collectionpointselect" id="collectionpointselect">
+                                                @foreach (var cp in cpList)
+                                                {
+                                                    <option data-cpid="@cp.Id" data-cpnid="@cp.CollectionName" id="cp_@cp.Id" value="@cp.Id">@cp.CollectionName</option>
+                                                }
+                                            </select>
+                                        <button type="button" onclick="ChangeCollectionPoint()">Change Collection Point</button>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                }
+
+            }
+        </div>
+
+        <input class="btn btn-primary" type="button" id="btnExport" value="Export" onclick="Export()" />
+
+        <div class="card">
+            <div class="card-body">
+                @{
+                    if (emp.EmployeeType.EmployeeTypeName == "Employee" || emp.EmployeeType.EmployeeTypeName == "Department Representative")
+                    {
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Submitted
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFSubmitted
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Approved
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFApproved
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Not Completed
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFNotCompleted
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Completed
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFCompleted
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                    }
+                    if (emp.EmployeeType.EmployeeTypeName == "Department Representative")
+                    {
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Disbursement Forms Pending Approval
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalDFCreated
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Disbursement Forms Pending Delivery
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalDFPendingDelivery
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Disbursement Forms Pending Assignment
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalDFPendingAssignment
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Disbursement Forms Completed
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalDFCompleted
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                    }
+                    if (emp.EmployeeType.EmployeeTypeName == "Department Head" || emp.TempDeptHeadType != null)
+                    {
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Pending Approvals
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFSubmittedDept
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Approved
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFApprovedDept
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Not Completed
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFNotCompletedDept
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                        <div class="row">
+
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Completed
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFCompletedDept
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                    }
+                    if (emp.EmployeeType.EmployeeTypeName == "Store Clerk" || emp.EmployeeType.EmployeeTypeName == "Store Supervisor" || emp.EmployeeType.EmployeeTypeName == "Store Manager")
+                    {
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Approved
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFApproved
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Requisitions Not Completed
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalRFNotCompleted
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Stationery Retrievals Created
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalSROpen
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Stationery Retrievals Pending Assignment
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalSRPendingAssignment
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Stationery Retrievals Completed
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalSRAssigned
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Disbursement Forms Pending Approval By Dept Rep
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalDFCreated
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Disbursement Forms Pending Delivery
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalDFPendingDelivery
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Disbursement Forms Pending Assignment
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalDFPendingAssignment
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Disbursement Forms Completed
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalDFCompleted
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                    }
+                    if (emp.EmployeeType.EmployeeTypeName == "Store Supervisor" || emp.EmployeeType.EmployeeTypeName == "Store Manager")
+                    {
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Inventory Transactions Pending Approval
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalITPendingApproval
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="card border-left-primary shadow h-100 py-2">
+                                    <div class="card-body">
+                                        <div class="row no-gutters align-items-center">
+                                            <div class="col mr-2">
+                                                <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
+                                                    Total Inventory Transactions Approved
+                                                </div>
+                                                <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                                    @Model.TotalITApproved
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row"><br /></div>
+                    }
+                }
+            </div>
+        </div>
+    </div>
+</body>
+
+@section scripts{
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.22/pdfmake.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
+    <script type="text/javascript">
+        function Export() {
+            html2canvas(document.getElementById('Dashboard'), {
+                onrendered: function (canvas) {
+                    var data = canvas.toDataURL();
+                    var docDefinition = {
+                        content: [{
+                            image: data,
+                            width: 500
+                        }]
+                    };
+                    pdfMake.createPdf(docDefinition).download("Dashboard Summary.pdf");
+                }
+            });
+        }
+    </script>
+    <script>
+    function ChangeCollectionPoint() {
+
+        var dVModel;
+        var model = @Html.Raw(Json.Serialize(Model));
+
+        var cpUpdated = {};
+        var id = $("#collectionpointselect").val();
+        var cpname = $("#collectionpointselect option:selected").html();
+
+        cpUpdated.id = id;
+
+        dVModel = { "emp": model.emp, "cpUpdated": cpUpdated }
+
+        $.ajax({
+                type: "POST",
+                url: "/cpUpdate",
+                data: JSON.stringify(dVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function () {
+                         alert("The Collection Point have been changed to " + cpName)
+                         $('#cpn').text(cpname);
+
+                }
+            });
+    }
+
+
+    </script>
+}
+

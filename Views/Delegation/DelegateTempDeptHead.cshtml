@@ -1,0 +1,113 @@
+﻿@model Inventory_Management_System.ViewModels.DelegationViewModel;
+@{
+    Layout = "_Layout";
+    var empList = Model.DeptEmployeeList;
+    var deptHead = Model.DepartmentHead;
+    var emp = Model.employee;
+    var dForm = Model.dForm;
+}
+
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+<body>
+
+
+<div>
+    <h4>Delegate Temporary Department Head</h4>
+    <div>
+        <div>
+            <table class="table table-bordered mt-3" style="width: 100%">
+                <tr>
+                    <td>Department Head Name: </td>
+                    <td>@deptHead.Firstname @deptHead.Lastname </td>
+                </tr>
+                <tr>
+                    <td>Assign Temporary Dept Head: </td>
+                    <td>
+                        <select class="deptrepselect" name="tempdeptheadselect" id="tempdeptheadselect">
+                            @foreach (var delegatee in empList)
+                            {
+                                <option id="delegatee_@delegatee.Id" value="@delegatee.Id">@delegatee.Firstname @delegatee.Lastname</option>
+                            }
+                        </select>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Start Date: <</td>
+                    <td>@Html.TextBoxFor(x => x.dForm.startDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @value = dForm.startDate })</td>
+                </tr>
+                <tr>
+                    <td>End Date: </td>
+                    <td>@Html.TextBoxFor(x => x.dForm.endDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @value = dForm.endDate })</td>
+                </tr>
+
+                <tfoot>
+                    <tr>
+                        <td colspan="6">
+                            <label for="comments">Reason (if any) :</label>
+                            <textarea class="form-control" id="comments" rows="4" required></textarea>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <button type="button" id="submitBtn"  class="btn btn-primary" onclick="Delegate()" />Delegate Temporary Dept Head
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
+@section scripts{
+    <script>
+
+        function Delegate() {
+
+            var startDate = $("#dForm_startDate").val();
+            var endDate = $("#dForm_endDate").val();
+            var delegateeId = $("#tempdeptheadselect").val();
+            var model = @Html.Raw(Json.Serialize(Model));
+            var dVModel;
+            var delegatee = {};
+            var comments = $("#comments").val();
+            var dForm = model.dForm;
+            
+            delegatee.Id = delegateeId;
+            delegatee.delegateComment = comments;
+
+            dVModel = {
+                "startDate": startDate,
+                "endDate": endDate,
+                "employee": model.employee,
+                "delegatee": delegatee,
+                "delegateComment": comments
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/delegation/savetempdepthead/",
+                data: JSON.stringify(dVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success == "Success") {
+                        alert("Success");
+                        location.href = "/delegation/summary";
+                    }
+                    else {
+                        alert("Fail");
+                    }
+                }
+
+            });
+        };
+    </script>
+}

@@ -1,0 +1,166 @@
+﻿@{ ViewData["Title"] = "Requisition Form";
+    Layout = "_Layout"; }
+@model Inventory_Management_System.ViewModels.RequisitionViewModel
+@{
+    var empType = @Model.employee.EmployeeType.EmployeeTypeName;
+    var rfStatus = Model.requisitionForm.RFStatus;
+    var rForm = Model.requisitionForm;
+    var dfrfList = Model.dfrfList;
+    var dfrfpList = Model.dfrfpList;
+
+}
+
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+
+</head>
+
+<body>
+    <h1>Requisition Information</h1>
+    <!--AddedByHTP-->
+    <!--Info of clerk/text fields-->
+
+    <div class="container mb-3 mt-3">
+        <table class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <tr>
+                <td><h5>Employee Name:</h5></td>
+                <td><h5>@Model.employee.Firstname @Model.employee.Lastname</h5></td>
+            </tr>
+            <tr>
+                <td><h5>Requisition ID:</h5></td>
+                <td><h5>@Model.requisitionForm.RFCode</h5></td>
+            </tr>
+            <tr>
+                <td><h5>Status:</h5></td>
+                <td><h5>@Model.requisitionForm.RFStatus.ToString()</h5></td>
+            </tr>
+
+        </table>
+
+        <h5>Requested Products Summary</h5>
+        <table id="productTbl" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Product Name</th>
+                    <th>Units of Measure</th>
+                    <th>Quantity Requested</th>
+                    @{
+                        if (rfStatus.ToString() == "Approved" || rfStatus.ToString() == "NotCompleted" || rfStatus.ToString() == "Completed")
+                        {
+                            <th>Quantity Approved</th>
+                            <th>Quantity Collected</th>
+                        }
+                    }
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ for (int i = 0; i < Model.rfpList.Count; i++)
+                    {
+                        <tr class="product">
+                            <td><input type="hidden" name="pid" class="productselect" data-pid="@Model.rfpList[i].Id" value="@Model.rfpList[i].Id">@(i+1)</td>
+                            <td name="productName" value="@Model.rfpList[i].Product.ProductName">@Model.rfpList[i].Product.ProductName</td>
+                            <td id="unit_@Model.rfpList[i].Product.Units">@Model.rfpList[i].Product.Units</td>
+                            <td name="productName" value="@Model.rfpList[i].ProductRequested">@Model.rfpList[i].ProductRequested</td>
+                            @{
+                                if (rfStatus.ToString() == "Approved" || rfStatus.ToString() == "NotCompleted" || rfStatus.ToString() == "Completed")
+                                {
+                                    <td name="productName" value="@Model.rfpList[i].ProductApproved">@Model.rfpList[i].ProductApproved </td>
+                                    <td name="productName" value="@Model.rfpList[i].ProductCollectedTotal">@Model.rfpList[i].ProductCollectedTotal</td>
+                                }
+                            }
+                        </tr>
+                    }
+                }
+
+            </tbody>
+            @{
+                if (rForm.RFComments == null)
+                {
+
+                }
+                else
+                {
+                    <tfoot>
+                        <tr>
+                            <td colspan="6"><label for="comments">Reason: @Model.requisitionForm.RFComments</label></td>
+                        </tr>
+                        @{
+                            if (rForm.RFHeadReply == null)
+                            { }
+                            else
+                            {
+                                <tr>
+                                    <td colspan="6"><label for="comments">Dept Head Reply: @Model.requisitionForm.RFHeadReply</label></td>
+                                </tr>
+                            }
+                        }
+
+                    </tfoot>
+                }
+            }
+        </table>
+
+
+        <h5>Disbursement Form Summary</h5>
+        <table id="dfrf" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Disbursement Form No</th>
+                    <th>Disbursement Form Status</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ for (int i = 0; i < Model.dfrfList.Count; i++)
+                    {
+                        <tr class="product">
+                            <td><input type="hidden" name="pid" class="productselect" data-pid="@Model.dfrfList[i].Id" value="@Model.dfrfList[i].Id">@(i+1)</td>
+                            <td name="productName" value="@Model.dfrfList[i].DisbursementForm.DFCode">@Model.dfrfList[i].DisbursementForm.DFCode</td>
+                            <td id="unit_@Model.dfrfList[i].Id">@Model.dfrfList[i].DisbursementForm.DFStatus</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        <h5>Disbursement Products Summary</h5>
+        <table id="dfrf" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Disbursement Form No</th>
+                    <th>Product Collected</th>
+                    <th>Units</th>
+
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ for (int i = 0; i < Model.dfrfpList.Count; i++)
+                    {
+                        <tr class="product">
+                            <td><input type="hidden" name="pid" class="productselect" data-pid="@Model.dfrfpList[i].Id" value="@Model.dfrfpList[i].Id">@(i+1)</td>
+                            <td name="productName" value="@Model.dfrfpList[i].DisbursementForm.DFCode">@Model.dfrfpList[i].DisbursementForm.DFCode</td>
+                            <td>@Model.dfrfpList[i].ProductCollected</td>
+                            <td>@Model.dfrfpList[i].RequisitionFormsProduct.Product.Units</td>
+
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+</body>
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script src="https://cdn.datatables.net/1.10.21/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.21/js/dataTables.bootstrap4.min.js"></script>
+}

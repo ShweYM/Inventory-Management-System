@@ -1,0 +1,65 @@
+﻿@using Microsoft.AspNetCore.Http;
+@{
+    ViewData["Title"] = "ProductDetails";
+    string empType = @Context.Session.GetString("empType");
+}
+@model Inventory_Management_System.ViewModels.ProductDetailViewModel
+    <h1>ProductDetails</h1>
+@section Styles{
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    
+}
+
+<div class="row">
+    <div class="col-md-6">
+        <table class="prod-form-tbl" style="margin-top:50px;">
+            <tr>
+                <td> Product Name:</td>
+                <td> @Model.product.ProductName</td>
+
+            </tr>
+            <tr>
+                <td>Product Category:</td>
+                <td>@Model.product.ProductCategory.ProductCategoryName</td>
+            </tr>
+            @{
+                if (@Model.product.ProductDescription != null)
+                {
+                    <tr>
+                        <td>Product Description:</td>
+                        <td>@Model.product.ProductDescription</td>
+                    </tr>
+                }
+            }
+            <tr>
+                <td>Unit of Measure:</td>
+                <td>@Model.product.Units</td>
+            </tr>
+            @{
+                if (empType == "Store Manager" || empType == "Store Supervisor" || empType == "Store Clerk")
+                {
+                    <tr>
+                        <td>Product Code:</td>
+                        <td>@Model.product.ProductCode</td>
+                    </tr>
+                    <tr>
+                        <td>Inventory Quantity:</td>
+                        <td>@Model.product.InventoryQuantity</td>
+                    </tr>
+                    <tr>
+                        <td>Reorder Level:</td>
+                        <td>@Model.product.ReorderLevel</td>
+                    </tr>
+                    <tr>
+                        <td>Reorder Quantity:</td>
+                        <td>@Model.product.ReorderQuantity</td>
+                    </tr>
+                }
+            }
+        </table>
+    </div>
+    <div class="col-md-6">
+        <img class="prod-detail-img" style="width:300px;height:300px;" src="~/images/@Model.product.ProductImage" />
+    </div>
+</div>
+

@@ -1,0 +1,180 @@
+﻿@model Inventory_Management_System.ViewModels.DisbursementViewModel;
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Disbursement Summary";
+    var dFCreatedList = Model.dFCreatedList;
+    var dFPendingDeliveryList = Model.dfPendingDeliveryList;
+    var dFCompletedList = Model.dfCompletedList;
+    var dFPendingAssignList = Model.dfPendingAssignList;
+    var emp = Model.employee;
+}
+
+<h1>@ViewData["Title"]</h1>
+@{
+    if (emp.EmployeeType.EmployeeTypeName != "Department Representative")
+    {
+        <input type="button" class="btn btn-primary" onclick="location.href='@Url.Action("CreateDisbursement","Disbursement")'" value="Create Disbursement Form" />
+    }
+}
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Disbursement Forms (Pending Dept Rep Approval)</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Disbursement No </th>
+                            <th>Dept Rep </th>
+                            <th>Expected Delivery Date</th>
+                            <th>Collection Point </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dFCreatedList.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    @{
+                                        if (emp.EmployeeType.EmployeeTypeName == "Department Representative")
+                                        {
+                                            <td><a href='/df/approval/@dFCreatedList[i].Id'>@dFCreatedList[i].DFCode</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td><a href='/df/view/@dFCreatedList[i].Id'>@dFCreatedList[i].DFCode</a></td>
+                                        }
+                                    }
+                                    <td>@dFCreatedList[i].DeptRep.Firstname @dFCreatedList[i].DeptRep.Lastname</td>
+                                    <td>@dFCreatedList[i].DFDeliveryDate</td>
+                                    <td>@dFCreatedList[i].CollectionPoint.CollectionName</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Disbursement Forms (Pending Delivery)</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Disbursement No</th>
+                            <th>Dept Representative</th>
+                            <th>Confirmed Delivery Date</th>
+                            <th>Collection Point</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dFPendingDeliveryList.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td><a href='/df/transaction/@dFPendingDeliveryList[i].Id'>@dFPendingDeliveryList[i].DFCode</a></td>
+                                    <td>@dFPendingDeliveryList[i].DeptRep.Firstname @dFPendingDeliveryList[i].DeptRep.Lastname</td>
+                                    <td>@dFPendingDeliveryList[i].DFDeliveryDate</td>
+                                    <td>@dFPendingDeliveryList[i].CollectionPoint.CollectionName</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Disbursement Forms (Pending Assignment)</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Disbursement No</th>
+                            <th>Dept Representative</th>
+                            <th>Confirmed Handover Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dFPendingAssignList.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    @{
+                                        if (emp.EmployeeType.EmployeeTypeName == "Department Representative")
+                                        {
+                                            <td><a href='/df/transactionassign/@dFPendingAssignList[i].Id'>@dFPendingAssignList[i].DFCode</a></td>
+                                        }
+                                        else
+                                        {
+                                            <td><a href='/df/view/@dFPendingAssignList[i].Id'>@dFPendingAssignList[i].DFCode</a></td>
+                                        }
+                                    }
+                                    <td>@dFPendingAssignList[i].DeptRep.Firstname @dFPendingAssignList[i].DeptRep.Lastname</td>
+                                    <td>@dFPendingAssignList[i].DFHandoverDate</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Disbursement Forms (Completed)</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Disbursement No </th>
+                            <th>Dept Representative </th>
+                            <th>Completion Date </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dFCompletedList.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td><a href='/df/view/@dFCompletedList[i].Id'>@dFCompletedList[i].DFCode</a> </td>
+                                    <td>@dFCompletedList[i].DeptRep.Firstname @dFCompletedList[i].DeptRep.Lastname</td>
+                                    <td>@dFCompletedList[i].DFTransAssignDate</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css" />
+    <link rel="stylesheet" href="../../../css/demo_1/style.css" />
+}

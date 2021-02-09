@@ -1,0 +1,149 @@
+﻿@{
+    ViewData["Title"] = "Account Summary";
+    Layout = "_Layout";
+}
+@model Inventory_Management_System.ViewModels.AccountViewModel
+@{
+    var emp = Model.employee;
+    var cList = Model.cList;
+}
+
+
+    <html lang="en">
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>@ViewData["Title"] - Inventory Management System</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+    </head>
+    <body>
+        <form>
+
+            <h1>@ViewData["Title"]</h1>
+
+            <!--Info of clerk/text fields-->
+            <div>
+                <table class="table table-bordered" id="accountTbl" style="width: 100%">
+                    <tbody>
+                        <tr>
+                            <td>ID: </td>
+                            <td><input type="hidden" id="id" name="id" /></td>
+                        </tr>
+                        <tr>
+                            <td>Username: </td>
+                            <td>@emp.Username</td>
+                        </tr>
+                        <tr>
+                            <td>Password: </td>
+                            <td><input type="password" id="password" class="password" name="password" value="@emp.Password" size="50" /></td>
+                        </tr>
+                        <tr>
+                            <td>Email: </td>
+                            <td><input type="email" id="email" class="email" name="email" value="@emp.Email" size="50" /></td>
+                        </tr>
+                        <tr>
+                            <td>First Name: </td>
+                            <td>@emp.Firstname</td>
+                        </tr>
+                        <tr>
+                            <td>Last Name: </td>
+                            <td>@emp.Lastname</td>
+                        </tr>
+                        <tr>
+                            <td>Phone Number: </td>
+                            <td><input type="text" id="phonenum" class="phonenum" name="phonenum" value="@emp.PhoneNumber" placeholder="NNNNNNNN" size="50" /></td>
+                        </tr>
+                        <tr>
+                            <td>Department Rep: </td>
+                            <td>@emp.DeptRep</td>
+                        </tr>
+                        <tr>
+                            <td>Supervised By: </td>
+                            <td>@emp.SupervisedBy.Firstname @emp.SupervisedBy.Lastname</td>
+                        </tr>
+                        <tr>
+                            <td>Employee Type: </td>
+                            <td>@emp.EmployeeType.EmployeeTypeName</td>
+                        </tr>
+                        @{
+                            if (emp.TempDeptHeadType != null)
+                            {
+                                <tr>
+                                    <td>Extra Employee Type: </td>
+                                    <td>@emp.TempDeptHeadType.EmployeeTypeName</td>
+                                </tr>
+                            }
+                        }
+                        @{
+                            if (emp.EmployeeType.EmployeeTypeName == "Department Representative")
+                            {
+                                <tr>
+                                    <td><h5>Choose a Collection Point</h5></td>
+                                    <td>
+                                        <select class="collectionpointselect" name="collectionpointselect" id="collectionpointselect">
+                                            @foreach (var collection in cList)
+                                            {
+                                                <option value="@collection.Id" size="50">@collection.CollectionName</option>
+                                            }
+                                        </select>
+                                    </td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+                <button type="button" id="submitBtn" onclick="Submit()" class="fadeIn fourth">Submit</button>
+                <button type="button" id="cancelBtn" onclick="window.location.href='Home/dashboard'" class="fadeIn fourth">Cancel</button>
+            </div>
+        </form>
+
+    </body>
+
+
+    </html>
+
+
+@section scripts{
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+<script>
+
+        function Submit() {
+
+            var model = @Html.Raw(Json.Serialize(Model));
+            var emp = model.employee;
+            var cp = {};
+            var password = $("#password").val();
+            var email = $("#email").val();
+            var phonenum = $("#phonenum").val();
+            var collectionPoint = $("#collectionpointselect").val();
+            var aVModel;
+
+            emp.password = password;
+            emp.email = email;
+            emp.phoneNumber = phonenum;
+            cp.id = collectionPoint;
+            aVModel = { "employee": emp, "collectionPoint":cp};
+
+            $.ajax({
+                type: "POST",
+                url: "/acc/save" ,
+                data: JSON.stringify(aVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r.success == "Success") {
+                        location.href = "Home/dashboard";
+                    }
+                    else {
+                        alert("Please check your values");
+
+                    }
+                }
+            });
+        }
+
+</script>
+}

@@ -1,0 +1,124 @@
+﻿@model Inventory_Management_System.ViewModels.InventoryTransactionViewModel;
+
+@{
+    ViewData["Title"] = "Inventory Transaction Approval";
+    Layout = "_Layout";
+}
+
+@{
+    var emp = Model.employee;
+    var pList = Model.ProductList;
+    var itList = Model.invTransList;
+    var it = Model.it;
+}
+
+
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+    <h1>Inventory Transaction Form</h1>
+
+
+
+    <!--Info of clerk/text fields-->
+    <div>
+        <table id="productTbl" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>Product Name</th>
+                    <th>Units of Measure</th>
+                    <th>Quantity to Adjust</th>
+                    <th>Total Value</th>
+
+                </tr>
+
+            </thead>
+            <tbody>
+
+                <tr class="product">
+                    <td id="productname_@it.Id" name="productName" data-pname="@it.Product.ProductName" value="@it.Product.ProductName">@it.Product.ProductName</td>
+                    <td id="unit_@it.Id">@it.Product.Units</td>
+                    <td id="productQuantity">@it.InventoryChangeQuantity</td>
+                    <td>@it.TotalValue</td>
+                </tr>
+
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                        <label for="comments">Reason (if any) :</label>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <textarea class="form-control" id="comments" rows="4" required></textarea>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        <button type="button" class="btn btn-primary" onclick="Approve()" value="Approve">Approve</button>
+        <button type="button" class="btn btn-danger" onclick="Reject()" value="Reject">Reject</button>
+    </div>
+
+</body>
+
+@section scripts{
+    <script>
+
+        function Approve() {
+
+            var itVModel;
+            var comments = $("#comments").val();
+            var model = @Html.Raw(Json.Serialize(Model));
+
+            itVModel = { "employee": model.employee, "comments": comments, "it": model.it };
+
+            $.ajax({
+                type: "POST",
+                url: "/it/approve",
+                data: JSON.stringify(itVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success == "Success") {
+                        alert("Success");
+                        location.href = "/inventory/transactionsummary";
+                    }
+                    else {
+                        alert("Fail");
+                    }
+                }
+
+            });
+        };
+
+        function Reject() {
+            var itVModel;
+            var comments = $("#comments").val();
+            var model = @Html.Raw(Json.Serialize(Model));
+
+            itVModel = { "employee": model.employee, "comments": comments, "it": model.it };
+
+            $.ajax({
+                type: "POST",
+                url: "/it/reject",
+                data: JSON.stringify(itVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r.success == "Success") {
+                        location.href = "/inventory/transactionsummary";
+                    }
+                }
+            });
+        }
+    </script>
+}

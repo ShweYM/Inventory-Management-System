@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Login";
+}
+
+@section styles{
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+}
+<div id="login">
+    <form id="loginForm" action="/login">
+        <table class="table table-bordered mt-3">
+            <tbody>
+                <tr>
+                    <td>Login: </td>
+                    <td><input type="text" id="username" class="fadeIn second" name="username" placeholder="login"></td>
+                </tr>
+                <tr>
+                    <td>Password: </td>
+                    <td><input type="password" id="password" class="fadeIn third" name="password" placeholder="password"></td>
+                </tr>
+            </tbody>
+        </table>
+        <input type="reset" id="loginBtnCancel" class="fadeIn fourth" value="Cancel">
+        <input type="submit" id="loginBtn" class="fadeIn fourth" value="Log In">
+    </form>
+</div>
+
+
+
+@section scripts{
+    <script>
+        $(function () {
+
+            $('.menu').removeClass('active');
+            $('#li_login').addClass('active');
+
+        })
+
+        $("#loginBtnCancel").click(function () {
+            $("#username").val("");
+            $("#password").val("");
+        })
+    </script>
+
+}

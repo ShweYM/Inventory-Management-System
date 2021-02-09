@@ -1,0 +1,246 @@
+﻿@model Inventory_Management_System.ViewModels.StationeryRetrievalViewModel
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "StationeryRetrievalForm";
+    var srrfList = Model.srrfList;
+    var srpList = Model.retrievalProducts;
+}
+
+
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css">
+    <link rel="stylesheet" href="../../../css/demo_1/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+}
+<h1>Stationery Retrieval Form</h1>
+<!--AddedByHTP-->
+<!--Info of clerk/text fields-->
+<div class="col-12 grid-margin">
+
+    <div class="card-body">
+
+        <form class="form-sample">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Store Clerk</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label">@Model.stationeryRetrieval.StoreClerk.Firstname @Model.stationeryRetrieval.StoreClerk.Lastname</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Creation Date</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label">@Model.stationeryRetrieval.SRDate</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Retrieval ID</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label">@Model.stationeryRetrieval.SRCode</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="form-group row">
+                        <label class="col-sm-3 col-form-label">Status</label>
+                        <div class="col-sm-9">
+                            <p class="col-form-label">@Model.stationeryRetrieval.SRStatus</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Requisition Form Summary</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered">
+                    <thead>
+                        <tr>
+                            <th> Id</th>
+                            <th> Requisition Number </th>
+                            <th> Requested By </th>
+                            <th> Date </th>
+                            <th> Status </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0;i < srrfList.Count;i++)
+                            //foreach (var requisition in Model.retrievalRequisitions)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>@srrfList[i].RequisitionForm.RFCode </td>
+                                    <td>@srrfList[i].RequisitionForm.Employee.Firstname @srrfList[i].RequisitionForm.Employee.Lastname</td>
+                                    <td>@srrfList[i].RequisitionForm.RFDate </td>
+                                    <td>@srrfList[i].RequisitionForm.RFStatus</td>
+                                </tr>
+                            }
+                        }
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Warehouse Stock Preview</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered" id="SRproductTbl">
+                    <thead>
+                        <tr>
+                            <th> S/N</th>
+                            <th> Description</th>
+                            <th> Quantity Requested </th>
+                            <th> Quantity To Receive From Warehouse </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < srpList.Count; i++)
+                            //foreach (var product in Model.retrievalProducts)
+                            {
+                                <tr>
+                                    <td id="srpselect"  class="Id" data-srpid="@srpList[i].Id">@(i+1) </td>
+                                    <td>@srpList[i].Product.ProductName </td>
+                                    <td>@srpList[i].ProductRequestedTotal</td>
+                                    @{
+                                        if (Model.stationeryRetrieval.SRStatus == Inventory_Management_System.Enums.SRStatus.Open)
+                                        {
+                                            <td><input type="text" id="receivedQty_@srpList[i].Id" class="receivedQty" value="@srpList[i].ProductReceivedTotal" /></td>
+                                        }
+                                        else
+                                        {
+                                            <td>@srpList[i].ProductReceivedTotal</td>
+                                        }
+                                    }
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="verifyby">
+    @{
+        if (Model.stationeryRetrieval.SRStatus == Inventory_Management_System.Enums.SRStatus.Open)
+        {
+            <table class="table table-borderless" id="loginTbl">
+                <thead>
+                    <tr>
+                        <th>Verified By Store Clerk</th>
+                        <th style="padding-left:12em;">Verified By Warehouse Representative</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Username: <input type="text" id="username1" class="fadeIn second" name="username" placeholder="username" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');"></td>
+                        <td style="padding-left:10em;">Username: <input type="text" id="username2" class="fadeIn second" name="username" placeholder="username" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');"></td>
+                    </tr>
+                    <tr>
+                        <td>Password: <input type="password" id="password1" class="fadeIn third" name="password" placeholder="password" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');"></td>
+                        <td style="padding-left:10em;">Password: <input type="password" id="password2" class="fadeIn third" name="password" placeholder="password" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');"></td>
+                    </tr>
+                    <!--<tr>
+                        <td style="padding-left:15em;"><b> Store Clerk</b></td>
+                        <td style="padding-left:15em;">Warehouse Representative</td>
+                    </tr>
+                        -->
+                    <tr>
+                        <td style="padding-left:40em;">
+                            <input type="submit" onclick="GetFromWarehouse()" />
+                        </td>
+                    </tr>
+                </tbody>
+
+            </table>
+        }
+    }
+</div>
+@section scripts{
+    <script>
+        //send back the qty received from warehouse and 2 users' login
+        function GetFromWarehouse() {
+
+            var model = @Html.Raw(Json.Serialize(Model));
+            var userlist=[];
+            var receivedproductlist = [];
+            var SRviewModel;
+
+            $('.Id').each(function () {
+                var id = $(this).attr('data-srpid');
+                var qty = $("#receivedQty_" + id).val();
+                for (var i = 0; i < model.retrievalProducts.length; i++) {
+                    var product = model.retrievalProducts[i];
+                    if (product.id == id) {
+                        product.productReceivedTotal = qty;
+                        receivedproductlist.push(product);
+                    }
+                }
+            });
+            var storeclerk = {};
+            var warehousepacker = {};
+            var username1 = $('#username1').val();
+            var password1 = $('#password1').val();
+
+            var username2 = $('#username2').val();
+            var password2 = $('#password2').val();
+
+            storeclerk.username = username1;
+            storeclerk.password = password1;
+
+            warehousepacker.username = username2;
+            warehousepacker.password = password2;
+
+            SRviewModel = {
+                "stationeryRetrieval": model.stationeryRetrieval,
+                "retrievalProducts": receivedproductlist,
+                "warehousepacker": warehousepacker,
+                "storeclerk": storeclerk,
+                "srrfList": model.srrfList
+            };
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("SaveReceivedQty", "StationeryRetrieval")',
+                data: JSON.stringify(SRviewModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                 success: function (result) {
+                     if (result.success == "Success") {
+                         alert("Success");
+                          location.href = "/srf/summary";
+                     }
+                     else {
+                         alert("Fail");
+                     }
+                }
+
+            });
+        }
+    </script>
+}

@@ -1,0 +1,181 @@
+﻿@{ ViewData["Title"] = "Disbursement Form Approval";
+    Layout = "_Layout"; }
+@model Inventory_Management_System.ViewModels.DisbursementViewModel
+@{
+    var df = Model.disbursementForm;
+    var dfrfList = Model.DisbursementFormRequisitionForms;
+    var dfpList = Model.DisbursementFormProducts;
+    var dfrfpList = Model.DisbursementFormRequisitionFormProducts;
+}
+
+
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css">
+    <link rel="stylesheet" href="../../../css/demo_1/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+}
+<h1>@ViewData["Title"]</h1>
+
+<div class="col-12 grid-margin">
+
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Store Clerk</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.StoreClerk.Firstname @df.StoreClerk.Lastname</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Department Representative</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DeptRep.Firstname @df.DeptRep.Lastname</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Disbursement No</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFCode</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Collection Point</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.CollectionPoint.CollectionName</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Disbursement Form Status</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFStatus</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Expected Delivery Date and Time</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFDeliveryDate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Requisition Form Status</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered mt-3" style="width: 100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Requisition No</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dfrfList.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>@dfrfList[i].RequisitionForm.RFCode</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Disbursement Product Summary</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered mt-3" style="width: 100%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Product Name</th>
+                            <th>Quantity To Deliver</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dfpList.Count; i++)
+                            {
+                                <tr>
+                                    <td>@(i+1)</td>
+                                    <td>@dfpList[i].Product.ProductName</td>
+                                    <td>@dfpList[i].ProductToDeliverTotal</td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+                <button type="button" class="btn btn-primary" onclick="Confirm()" value="Confirm">Confirm</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script>
+
+        function Confirm() {
+            var dVModel;
+            var model = @Html.Raw(Json.Serialize(Model));
+            var id = $(".df").attr("data-dfid");
+            //var datetime = $("#datetime" + id).val();
+            var df = model.disbursementForm;
+            //df.dfDeliveryDate = datetime;
+
+                dVModel = {
+                    "employee": model.employee, "disbursementForm": df  };
+
+            $.ajax({
+                type: "POST",
+                url: "/df/approve/" +@df.Id,
+                data: JSON.stringify(dVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r.success == "Success") {
+                        location.href = "/df/summary";
+                    }
+                }
+            });
+        }
+    </script>
+}
+

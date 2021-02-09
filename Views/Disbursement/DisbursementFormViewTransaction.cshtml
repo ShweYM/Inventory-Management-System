@@ -1,0 +1,217 @@
+﻿@{ ViewData["Title"] = "Disbursement Form - Handover";
+    Layout = "_Layout"; }
+@model Inventory_Management_System.ViewModels.DisbursementViewModel
+@{
+    var df = Model.disbursementForm;
+    var dfrfList = Model.DisbursementFormRequisitionForms;
+    var dfpList = Model.DisbursementFormProducts;
+    var dfrfpList = Model.DisbursementFormRequisitionFormProducts;
+}
+
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css">
+    <link rel="stylesheet" href="../../../css/demo_1/style.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+}
+<h1>@ViewData["Title"]</h1>
+<!--AddedByHTP-->
+<!--Info of clerk/text fields-->
+<div class="col-12 grid-margin">
+
+    <div class="card-body">
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Store Clerk</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.StoreClerk.Firstname @df.StoreClerk.Lastname</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Department Representative</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DeptRep.Firstname @df.DeptRep.Lastname</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Disbursement No</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFCode</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Collection Point</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DeptRep.Department.CollectionPoint.CollectionName</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Disbursement Form Status</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFStatus</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group row">
+                    <label class="col-sm-3 col-form-label">Delivery Date and Time</label>
+                    <div class="col-sm-9">
+                        <p class="col-form-label">@df.DFDeliveryDate</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Collection Summary</h4>
+            <div class="table-vertical-scroll">
+                <table class="dfTable" style="width: 100%" id="dfTable">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th>S/N</th>
+                            <th>Product Name</th>
+                            <th>Quantity Approved</th>
+                            <th>Quantity To Deliver</th>
+                            <th>Quantity Dept To Receive</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @{
+                            for (int i = 0; i < dfpList.Count; i++)
+                            {
+                                <tr>
+                                    <td class="dfupdate" data-dfpid="@dfpList[i].Id">@(i+1)</td>
+                                    <td>@dfpList[i].Product.ProductName</td>
+                                    <td>@dfpList[i].ProductApprovedCount</td>
+                                    <td>@dfpList[i].ProductToDeliverTotal</td>
+                                    <td><input type="number" id="dfdelivered_@dfpList[i].Id" value="@dfpList[i].ProductDeliveredTotal" /></td>
+                                </tr>
+                            }
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="verifyby">
+
+    <table class="table table-borderless" id="loginTbl">
+        <thead>
+            <tr>
+                <th>Verified By Store Clerk</th>
+                <th style="padding-left:12em;">Verified By Department Representative</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Username: <input type="text" id="username1" class="fadeIn second" name="username" placeholder="username" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');"></td>
+                <td style="padding-left:10em;">Username: <input type="text" id="username2" class="fadeIn second" name="username" placeholder="username" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');"></td>
+            </tr>
+            <tr>
+                <td>Password: <input type="password" id="password1" class="fadeIn third" name="password" placeholder="password" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');"></td>
+                <td style="padding-left:10em;">Password: <input type="password" id="password2" class="fadeIn third" name="password" placeholder="password" readonly onfocus="this.removeAttribute('readonly');" onblur="this.setAttribute('readonly','');"></td>
+            </tr>
+        </tbody>
+        <tfoot>
+            <tr>
+                <td colspan="4">
+                    <label for="comments">Comments (if any) :</label>
+                </td>
+            </tr>
+            <tr>
+                <td colspan="4">
+                    <textarea class="form-control" id="comment" rows="4" required></textarea>
+                </td>
+            </tr>
+            <tr>
+                <td style="padding-left:40em;">
+                    <input type="submit" onclick="ConfirmDelivery()" />
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+
+</div>
+@section scripts{
+    <script>
+        //send back the qty received from warehouse and 2 users' login
+        function ConfirmDelivery() {
+
+            var model = @Html.Raw(Json.Serialize(Model));
+            var dVModel;
+            var comment = $("#comment").val();
+            var dfpList = [];
+
+            $('.dfupdate').each(function () {
+                var dfp = {};
+                var id = $(this).attr('data-dfpid');
+                var qty = $("#dfdelivered_" + id).val();
+                dfp.Id = id;
+                dfp.ProductDeliveredTotal = qty;
+                dfpList.push(dfp);
+            });
+
+            var storeclerk = {};
+            var deptrep = {};
+            var username1 = $('#username1').val();
+            var password1 = $('#password1').val();
+
+            var username2 = $('#username2').val();
+            var password2 = $('#password2').val();
+
+            storeclerk.Username = username1;
+            storeclerk.Password = password1;
+
+            deptrep.Username = username2;
+            deptrep.Password = password2;
+
+            dVModel = {
+                "DisbursementFormProducts": dfpList, "deptrep": deptrep, "storeclerk": storeclerk, "comment": comment, "disbursementForm": model.disbursementForm };
+
+            //console.log(SRviewModel);
+            $.ajax({
+                type: "POST",
+                url: "/df/confirmdelivery",
+                data: JSON.stringify(dVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                 success: function (result) {
+                     if (result.success == "Success") {
+                         alert("Success");
+                          location.href = "/df/summary";
+                     }
+                     else {
+                         alert("Fail");
+                     }
+                }
+
+            });
+        }
+    </script>
+}

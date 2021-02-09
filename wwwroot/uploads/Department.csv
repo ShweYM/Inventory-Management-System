@@ -1,0 +1,11 @@
+﻿DepartmentName,DepHead,PhoneNumber,DeptRep,Email,CollectionPoint,DeptCode
+Store,,12345678,,,,STOR
+English Department,,98765432,,,,ENDP
+Chinese Department,,87654321,,,,CHSL
+Engineering Department,,76543219,,,,ENGD
+Arts Department,,53046012,,,,ARTD
+Business Department,,15397864,,,,BIZD
+Science Department,,68425397,,,,SCID
+Management Department,,86957412,,,,MNGD
+HQ Department,,32540325,,,,HQDP
+Music Department,,78954120,,,,MSDP

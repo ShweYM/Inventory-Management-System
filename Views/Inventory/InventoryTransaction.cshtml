@@ -1,0 +1,129 @@
+﻿@model Inventory_Management_System.ViewModels.InventoryTransactionViewModel;
+
+@{
+    ViewData["Title"] = "Inventory Transaction Form";
+    Layout = "_Layout";
+}
+
+@{
+    var emp = Model.employee;
+    var pList = Model.ProductList;
+
+}
+
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+    <h1>Inventory Transaction Form</h1>
+
+
+
+    <!--Info of clerk/text fields-->
+    <div>
+        <form id="productForm">
+            <table id="productTbl" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th>Selection</th>
+                        <th>Product Name</th>
+                        <th>Units of Measure</th>
+                        <th>Current Inventory</th>
+                        <th>Quantity to Adjust</th>
+
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var product in pList)
+                        {
+                            <tr class="product">
+                                <td>
+                                    <input type="checkbox" name="pid" class="productselect" data-pid="@product.Id" value="@product.Id">
+                                </td>
+                                <td id="productname_@product.Id" name="productName" data-pname="@product.ProductName" value="@product.ProductName">@product.ProductName</td>
+                                <td id="unit_@product.Id">@product.Units</td>
+                                <td id="productQuantity">@product.InventoryQuantity</td>
+                                <td>
+                                    <input type="number" class="QuantitytoChange" name="QuantitytoChange" id="invtrans_@product.Id" min="@(-product.InventoryQuantity)"/>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <label for="comments">Reason (if any) :</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <textarea class="form-control" id="comments" rows="4" required></textarea>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <button type="button" id="submitinvtBtn" onclick="ChooseProducts()" class="fadeIn fourth">Submit</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
+
+@section scripts{
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+<script>
+
+    
+    function ChooseProducts()
+        {
+            var products = [];
+            var invQuantityTransList = [];
+            var model = @Html.Raw(Json.Serialize(Model));
+            var itVModel;
+            var comment = $("#comments").val();
+            var empId = model.employee.employeeId;
+
+            $('.productselect:checked').each(function () {
+                var id = $(this).attr('data-pid');
+                var qty = $("#invtrans_" + id).val();
+                for (var i = 0; i < model.productList.length; i++) {
+                    var product = model.productList[i];
+                    if (product.id == id) {
+                        products.push(product);
+                        invQuantityTransList.push(qty);
+                    }
+                }
+            });
+
+            itVModel = {
+                "employee": model.employee, "ProductList": products, "comments": comment, "invQuantityTransList": invQuantityTransList, "employeeId": empId };
+            $.ajax({
+                type: "POST",
+                url: "/inventory/transaction/save",
+                data: JSON.stringify(itVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r.success == "Success") {
+                        location.href = "/inventory/transactionsummary"                    }
+                    else {
+                        alert("Please ensure that Inventory is not less than 0");
+                    }
+                }
+                
+            });
+        }
+</script>
+}

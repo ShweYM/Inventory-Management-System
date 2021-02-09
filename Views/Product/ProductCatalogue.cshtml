@@ -1,0 +1,32 @@
+﻿
+@{
+    ViewData["Title"] = "ProductCatalogue";
+    Layout = "_Layout";;
+    List<Product> products = (List<Product>)ViewData["products"];
+}
+@section Styles{
+    <link rel="stylesheet" href="../../../css/product.css">
+}
+<div>
+    <h1>ProductCatalogue</h1>
+    <div class="searchbox">
+        <form id="searchbox" asp-action="search" asp-controller="Product" method="post">
+            <input type="text" placeholder="Search.." name="SearchString">
+        </form>
+    </div>
+</div>
+<!--show all products-->
+<section class="products">
+
+    @foreach (var product in products)
+    {
+        <div class="product-card">
+            <div class="product-card-in">
+                <img class="product-image" src="~/images/@product.ProductImage" />
+                <div class="product-name"><a href='~/Product/ProductForm?id=@product.Id'>@product.ProductName</a></div>
+                <div class="product-category">@product.ProductCategory.ProductCategoryName</div>
+                <div class="product-uom">@product.Units</div>
+            </div>
+        </div>
+    }
+</section>

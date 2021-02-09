@@ -1,0 +1,46 @@
+﻿@{
+    Layout = "_Layout";
+}
+
+@model IList<Supplier>;
+
+<h1>SupplierList</h1>
+
+
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+</style>
+<table style="width:100%">
+    <tr>
+        <th>SupplierCode</th>
+        <th>SupplierName</th>
+        <th>ContactName</th>
+        <th>PhoneNumber</th>
+        <th>FaxNumaber</th>
+        <th>Address</th>
+        <th>GST registration Number</th>
+    </tr>
+    <tbody>
+        @{
+            for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>@Model[i].SupplierCode/td>
+                    <td>@Model[i].SupplierName</td>
+                    <td>@Model[i].ContactName</td>
+                    <td>@Model[i].PhoneNumber</td>
+                    <td>@Model[i].FaxNumber</td>
+                    <td>@Model[i].Address</td>
+                    <td>@Model[i].GSTregistrationNumber</td>
+                </tr>
+
+            }
+
+        }
+
+    </tbody>
+</table>
+

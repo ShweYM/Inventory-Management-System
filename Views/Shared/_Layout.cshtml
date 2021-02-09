@@ -1,0 +1,221 @@
+﻿<!DOCTYPE html>
+
+
+@using Microsoft.AspNetCore.Http;
+@using Newtonsoft.Json;
+
+@{
+    string val = Context.Session.GetString("username");
+    string fullname = Context.Session.GetString("firstName") + " " + Context.Session.GetString("lastName");
+    string empType = Context.Session.GetString("empType");
+    string tempDeptHead = Context.Session.GetString("tempDeptHead");
+}
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .navbar1 {
+            overflow: hidden;
+            background-color: #333;
+        }
+
+            .navbar1 a {
+                float: left;
+                font-size: 16px;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+
+        .dropdown1 {
+            float: left;
+            overflow: hidden;
+        }
+
+            .dropdown1 .dropbtn1 {
+                font-size: 16px;
+                border: none;
+                outline: none;
+                color: white;
+                padding: 14px 16px;
+                background-color: inherit;
+                font-family: inherit;
+                margin: 0;
+            }
+
+            .navbar1 a:hover, .dropdown1:hover .dropbtn {
+                background-color: red;
+            }
+
+        .dropdown-content1 {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+        }
+
+            .dropdown-content1 a {
+                float: none;
+                color: black;
+                padding: 12px 16px;
+                text-decoration: none;
+                display: block;
+                text-align: left;
+            }
+
+                .dropdown-content1 a:hover {
+                    background-color: #ddd;
+                }
+
+        .dropdown1:hover .dropdown-content1 {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="navbar1">
+        <a href="/login">Inventory Management System</a>
+        @{
+            if (val != null)
+            {
+            <div class="dropdown1">
+                @{
+                    if (empType == "Store Manager" || empType == "Store Clerk" || empType == "Store Supervisor" || empType == "Warehouse Packer")
+                    {
+                        <button class="dropbtn1">Products/Inventory<i class="fa fa-caret-down"></i></button>
+                        <div class="dropdown-content1">
+                            <a href="/product/catalogue">Products Catalogue</a>
+                            <a href="/inventory/manage">Update Inventory</a>
+                            <a href="/inventory/summary">Inventory Summary</a>
+                            <a href="/inventory/transactionsummary">Inventory Transaction Summary</a>
+                            <a href="/podo/summary">PO/DO Summary</a>
+                            <a href="/po/create">Create Purchase Order</a>
+                            <a href="/do/create">Create Delivery Order</a>
+                        </div>
+                    }
+                    else
+                    {
+                        <button class="dropbtn1">Products<i class="fa fa-caret-down"></i></button>
+                        <div class="dropdown-content1">
+                            <a href="/product/catalogue">Products Catalogue</a>
+                        </div>
+                    }
+
+                }
+            </div>
+
+                if (empType == "Store Manager" || empType == "Store Clerk" || empType == "Store Supervisor" || empType == "Warehouse Packer")
+                {
+                    <div class="dropdown1">
+                        <button class="dropbtn1">
+                            Directory <i class="fa fa-caret-down"></i>
+                        </button>
+                        <div class="dropdown-content1">
+                            <a href="/department">Department Summary</a>
+                            <a href="/supplier/summary">Supplier Summary</a>
+                        </div>
+                    </div>
+                }
+
+                <div class="dropdown1">
+                    <button class="dropbtn1">Forms<i class="fa fa-caret-down"></i></button>
+                    <div class="dropdown-content1">
+                        @{
+                            if (empType == "Employee" || empType == "Department Representative" && tempDeptHead == null)
+                            {
+                                <a href="/rf/summary">Requisition Summary</a>
+                                <a href="/rf/apply">Apply Requisitions</a>
+
+                            }
+                            if (empType == "Department Head" || tempDeptHead != null)
+                            {
+                                <a href="/rf/summary">Requisition Summary</a>
+
+                            }
+                            if (empType == "Store Manager" || empType == "Store Clerk" || empType == "Store Supervisor")
+                            {
+                                <a href="/srf/summary">Stationery Retrieval Summary</a>
+                                <a href="/df/summary">Disbursement Summary</a>
+                                <a href="/srf/createsrf">Create Stationery Retrieval</a>
+                                <a href="/df/create">Create Disbursement</a>
+                            }
+                            if (empType == "Department Representative")
+                            {
+                                <a href="/df/summary">Disbursement Summary</a>
+                            }
+                            
+
+                        }
+                    </div>
+                </div>
+
+                                if (empType == "Store Manager" || empType == "Store Clerk" || empType == "Store Supervisor")
+                                {
+                    <div class="dropdown1">
+                    <button class="dropbtn1">Trend Analysis<i class="fa fa-caret-down"></i></button>
+                        <div class="dropdown-content1">
+                            <a href="/tac/category">Trends Summary by Category</a>
+                            <a href="/tac/department">Trends Summary by Department</a>
+                        </div>
+                    </div>
+                }
+
+                if (empType == "Department Head" || tempDeptHead == "Temporary Department Head")
+                {
+                    <div class="dropdown1">
+                        <button class="dropbtn1">Delegations<i class="fa fa-caret-down"></i></button>
+                        <div class="dropdown-content1">
+                            <a href="/delegation/summary">Delegation Summary</a>
+                            <a href="/delegatedeptrep">Assign Department Representative</a>
+                            @{
+                                if (empType == "Department Head")
+                                {
+                                    <a href="/delegation/assigntempdepthead">Delegate Temp Dept Head</a>
+                                }
+                            }
+                        </div>
+
+                    </div>
+                }
+
+            }
+        }
+        <div class="navbar-header" style="float:right;">
+            <a href="/account" style="text-align:right;">@fullname</a>
+
+            @{ if (val is null)
+                {
+                    @Html.ActionLink("Login", "Index", "Home") 
+                }
+                else if (val != null)
+                {
+                    @Html.ActionLink("Logout", "Logout", "Home") 
+                } 
+            }
+        </div>
+    </div>
+    <div class="container body-content" style="margin-top:10px">
+        @RenderSection("Styles", required: false)
+        @RenderBody()
+        <hr />
+        <footer>
+            <p>&copy; @DateTime.Now.Year - Developed By Team3 - NUS(ISS)</p>
+        </footer>
+
+    </div>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
+
+</body>
+</html>

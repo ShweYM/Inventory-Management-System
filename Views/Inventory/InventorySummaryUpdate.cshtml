@@ -1,0 +1,128 @@
+﻿@{
+    Layout = "_Layout";
+    ViewData["Title"] = "Inventory Summary - Update";
+}
+
+@model Inventory_Management_System.ViewModels.InventoryTransactionViewModel;
+@{
+
+    var invProds = Model.ProductList;
+}
+    <head>
+        <!-- Required meta tags -->
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>@ViewData["Title"] - Inventory Management System</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+        <style>
+            .table.no-cellpadding td {
+            padding: 0
+            }
+
+            table td {
+                border: solid 1px #fab;
+                width: 100px;
+                word-wrap: break-word;
+            }
+        </style>
+    </head>
+<h1>@ViewData["Title"]</h1>
+<div class="col-lg-12 grid-margin stretch-card">
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Inventory Summary</h4>
+            <div class="table-vertical-scroll">
+                <table class="table table-bordered mt-3">
+                    <thead>
+                        <tr>
+                            <th><span>Product Category</span></th>
+                            <th><span>Product Name</span></th>
+                            <th><span>Inventory Nos</span></th>
+                            <th><span>Units</span></th>
+                            <th><span>Reorder Level</span></th>
+                            <th><span>Suggested Level</span></th>
+                            <th><span>Reorder Quantity</span></th>
+                            <th><span>Suggested Quantity</span></th>
+                            <th><span>Location</span></th>
+                        </tr>
+
+                    </thead>
+                    <tbody>
+                        @{ for (int i = 0; i < invProds.Count; i++)
+                            {
+                                <tr>
+                                    <td class="productselect" data-pid="@invProds[i].Id">@invProds[i].ProductCategory.ProductCategoryName</td>
+                                    <td>@invProds[i].ProductName</td>
+                                    <td>@invProds[i].InventoryQuantity</td>
+                                    <td>@invProds[i].Units</td>
+                                    <td><input type="number" class="form-group w-50" id="reorderlvl_@invProds[i]" min="0" value="@invProds[i].ReorderLevel" /></td>
+                                    <td>@invProds[i].MLReorderLevel</td>
+                                    <td><input type="number" class="form-group w-50" id="reorderqty_@invProds[i]" min="0" value="@invProds[i].ReorderQuantity" /></td>
+                                    <td>@invProds[i].MLReorderQuantity</td>
+                                    <td><input type="number" class="form-group w-75" id="invlocation_@invProds[i]" min="0" value="@invProds[i].InventoryLocation" /></td>
+                                </tr>
+                            } }
+
+                    </tbody>
+                </table>
+                <button  class="btn btn-primary" type="button" id="submitRfBtn" onclick="Update()" class="fadeIn fourth">Update Reorder Levels</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@section Styles{
+    <link rel="stylesheet" href="../../../css/shared/style.css" />
+    <link rel="stylesheet" href="../../../css/demo_1/style.css" />
+}
+
+
+@section scripts{
+    @*@{await Html.RenderPartialAsync("_ValidationScriptsPartial");}*@
+    <script>
+
+        function Update() {
+
+            var productlist = [];
+            var model = @Html.Raw(Json.Serialize(Model));
+            var itVModel;
+
+            $('.productselect').each(function () {
+                var id = $(this).attr('data-pid');
+                var reorderlvl = $("#reorderlvl_" + id).val();
+                var reorderqty = $("#reorderqty_" + id).val();
+                var invlocation = $("#invlocation_" + id).val();
+
+                for (var i = 0; i < model.productList.length; i++) {
+                    var product = model.productList[i];
+                    if (product.id == id) {
+                        product.id = id;
+                        product.reorderLevel = reorderlvl;
+                        product.reorderQuantity = reorderqty;
+                        product.inventoryLocation = invlocation;
+                        productlist.push(product);
+                    }
+
+                }
+
+            });
+
+            itVModel = { "employee": model.employee, "productList": productlist };
+
+
+            $.ajax({
+                type: "POST",
+                url: "/inventory/update",
+                data: JSON.stringify(itVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    //alert(r + " record(s) inserted.");
+                    location.href = "/inventory/summary"
+                }
+            });
+        }
+    </script>
+}

@@ -1,0 +1,141 @@
+﻿@model Inventory_Management_System.ViewModels.DelegationViewModel;
+
+@{
+    Layout = "_Layout";
+    var deptHead = Model.DepartmentHead;
+    var emp = Model.employee;
+    var dForm = Model.dForm;
+}
+
+
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+<body>
+    <div>
+        <h4>Delegation Form Details</h4>
+
+        <table class="table table-bordered mt-3" style="width: 100%">
+            <tr>
+                <td>Department Head Name: </td>
+                <td>@dForm.DepartmentHead.Firstname @dForm.DepartmentHead.Lastname </td>
+            </tr>
+            <tr>
+                <td>@dForm.DelegatedType.EmployeeTypeName: </td>
+                <td>@dForm.Delegatee.Firstname @dForm.Delegatee.Lastname</td>
+            </tr>
+            <tr>
+                <td>Delegation Status: </td>
+                <td>@dForm.DLStatus</td>
+            </tr>
+            @{
+                if (dForm.DelegatedType.EmployeeTypeName == "Temporary Department Head")
+                {
+                    <tr>
+                        <td>Start Date: </td>
+                        @{
+                            if (emp.EmployeeType.EmployeeTypeName == "Department Head")
+                            {
+                                if (dForm.startDate > DateTime.Now)
+                                {
+                                    <td>@Html.TextBoxFor(x => x.dForm.startDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @value = dForm.startDate })</td>
+                                }
+                                else
+                                {
+                                    <td>@dForm.startDate.Date.ToString("dd/MM/yyyy")</td>
+                                }
+                            }
+                            else
+                            {
+                                <td>@dForm.startDate.Date.ToString("dd/MM/yyyy")</td>
+                            }
+                        }
+
+                    </tr>
+                    <tr>
+                        <td>End Date: </td>
+                        @{
+                            if (emp.EmployeeType.EmployeeTypeName == "Department Head")
+                            {
+                                if (dForm.endDate > DateTime.Now)
+                                {
+                                    <td>@Html.TextBoxFor(x => x.dForm.endDate, "{0:yyyy-MM-dd}", new { @class = "form-control", @type = "date", @value = dForm.endDate })</td>
+                                }
+                                else
+                                {
+                                    <td>@Html.DisplayFor(m => m.dForm.endDate, "{0:dd/MM/yyyy}", new { @type = "date" })</td>
+                                }
+                            }
+                            else
+                            {
+                                <td>@dForm.endDate.Date.ToString("dd/MM/yyyy")</td>
+                            }
+                        }
+
+                    </tr>
+
+                }
+            }
+            <tfoot>
+                <tr>
+                    <td colspan="6">
+                        <label for="comments">Reason (if any) :</label>
+                        @dForm.delegateComment
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
+        @{
+            if (emp.EmployeeType.EmployeeTypeName == "Department Head" && dForm.DelegatedType.EmployeeTypeName == "Temporary Department Head")
+            {
+                <button type="button" class="btn btn-primary" onclick="Update()" value="Update">Update</button>
+                <button type="button" class="btn btn-primary" onclick="window.location.href='/dl/cancel/' + @dForm.Id" value="Cancel">Cancel</button>
+            }
+        }
+    </div>
+
+</body>
+</html>
+
+@section scripts{
+    <script>
+
+        function Update() {
+
+            var endDate = $("#dForm_endDate").val();
+            var startDate = $("#dForm_startDate").val();
+            var model = @Html.Raw(Json.Serialize(Model));
+            var dVModel;
+            var dForm = model.dForm;
+            dForm.startDate = startDate;
+            dForm.endDate = endDate;
+
+            dVModel = {
+                "dForm": dForm
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/dl/updatedform/",
+                data: JSON.stringify(dVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (result) {
+                    if (result.success == "Success") {
+                        alert("Success");
+                        location.href = "/delegation/summary";
+                    }
+                    else {
+                        alert("Fail");
+                    }
+                }
+
+            });
+        };
+    </script>
+}

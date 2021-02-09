@@ -1,0 +1,23 @@
+﻿RFCode,Product,Status,ProductRequested,ProductApproved,ProductCollectedTotal
+RF/STOR/120820/1,"Clips Double 1""",Submitted,45,,
+RF/STOR/120820/1,File-Blue with Logo,Submitted,46,,
+RF/STOR/120820/1,Eraser (hard),Submitted,30,,
+RF/STOR/120820/2,"Envelope Brown (3""x6"")",Approved,41,40,
+RF/STOR/120820/2,"Envelope Brown (5""x7"")",Approved,35,34,
+RF/STOR/120820/2,"Clips Double 1""",Approved,38,38,
+RF/MNGD/100820/1,Eraser (hard),Ongoing,48,48,
+RF/MNGD/100820/1,Hole Puncher Adjustable,Ongoing,32,32,
+RF/MNGD/100820/1,Paper Photostat A3,Ongoing,30,25,
+RF/MNGD/100820/2,Hole Puncher Adjustable,Completed,32,30,30
+RF/MNGD/100820/2,Pen Ballpoint Blue,Completed,30,25,25
+RF/MNGD/100820/2,Pen Ballpoint Red,Completed,46,46,46
+RF/MNGD/100820/2,Pen Felt Tip Black,Completed,35,35,35
+RF/MNGD/100820/3,Transparency Blue,NotCompleted,39,35,30
+RF/MNGD/100820/3,Transparency Clear,NotCompleted,41,35,20
+RF/MNGD/100820/3,Transparency Green,NotCompleted,46,35,10
+RF/SCID/120820/1,Pen Ballpoint Blue,Cancelled,49,,
+RF/SCID/120820/1,Pen Ballpoint Red,Cancelled,43,,
+RF/SCID/120820/1,Pen Felt Tip Black,Cancelled,39,,
+RF/SCID/120820/2,"Envelope Brown (3""x6"")",Rejected,32,,
+RF/SCID/120820/2,Pen Ballpoint Blue,Rejected,45,,
+RF/SCID/010820/1,"Envelope Brown (3""x6"")",Ongoing,36,20,

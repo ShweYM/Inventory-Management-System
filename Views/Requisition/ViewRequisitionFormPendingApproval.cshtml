@@ -1,0 +1,188 @@
+﻿@{ ViewData["Title"] = "Requisition Form";
+    Layout = "_Layout"; }
+@model Inventory_Management_System.ViewModels.RequisitionViewModel
+@{
+    var empType = Model.employee.EmployeeType.EmployeeTypeName;
+    var rfStatus = Model.requisitionForm.RFStatus;
+    var rForm = Model.requisitionForm;
+    var emp = Model.employee;
+    var rfpList = Model.rfpList;
+
+}
+
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+
+</head>
+
+<body>
+    <h1>Requisition Information</h1>
+
+    <div class="container mb-3 mt-3">
+        <table>
+            <tr>
+                <td><h5>Employee Name:</h5></td>
+                <td><h5>@Model.requisitionForm.Employee.Firstname @Model.requisitionForm.Employee.Lastname</h5></td>
+            </tr>
+            <tr>
+                <td><h5>Requisition ID:</h5></td>
+                <td><h5>@Model.requisitionForm.RFCode</h5></td>
+            </tr>
+            <tr>
+                <td><h5>Status:</h5></td>
+                <td><h5>@Model.requisitionForm.RFStatus.ToString()</h5></td>
+            </tr>
+            
+
+        </table>
+
+
+        <table id="productTbl" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Product Name</th>
+                    <th>Quantity Requested</th>
+                    <th>Units of Measure</th>
+                    <th>Quantity To Approve</th>
+
+
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ for (int i = 0; i < Model.rfpList.Count; i++)
+                    {
+                                <tr class="rfproduct">
+                                    <td><input type="hidden" name="rfpid" class="rfpidclass" data-rfpid="@Model.rfpList[i].Id">@(i+1)</td>
+                                    <td name="productName" value="@Model.rfpList[i].Product.ProductName">@Model.rfpList[i].Product.ProductName</td>
+                                    <td name="productRequested" value="@Model.rfpList[i].ProductRequested">@Model.rfpList[i].ProductRequested</td>
+                                    <td id="unit_@Model.rfpList[i].Product.Units">@Model.rfpList[i].Product.Units</td>
+                                    <td><input type="number" class="productQuantityToApprove" name="productQuantityToApprove" id="rfproduct_@Model.rfpList[i].Id" min="0" max="@Model.rfpList[i].ProductApproved" value="@Model.rfpList[i].ProductApproved" /></td>
+
+                                </tr>
+                    } }
+
+            </tbody>
+            <tfoot>
+                @{
+                    if (rForm.RFComments == null)
+                    { }
+                    else
+                    {
+                        <tr>
+                            <td colspan="6"><label for="comments">Reason: @Model.requisitionForm.RFComments</label></td>
+                        </tr>
+                    }
+                }
+            <tr>
+                <td colspan="6">
+                    <label>Dept Head Comments (If Any): </label>
+                    <br />
+                    <textarea class="form-control" id="rfheadreply" rows="6" required></textarea>
+                    <br />
+                        <button type="button" class="btn btn-primary" onclick="Approve()" value="Approve">Approve</button>
+                        <button type="button" class="btn btn-danger" onclick="Reject()" value="Reject">Reject</button>
+                    </td>
+                </tr>
+                
+            </tfoot>
+            </table>
+    </div>
+</body>
+
+</html>
+
+
+
+@section scripts
+{
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+        }
+
+<script>
+
+        function Approve() {
+
+
+            var rVModel;
+            var rfheadreply = $("#rfheadreply").val();
+            var model = @Html.Raw(Json.Serialize(Model));
+            var rfpList = new Array();
+
+            $('.rfpidclass').each(function () {
+                var id = $(this).attr('data-rfpid');
+                var qty = $("#rfproduct_" + id).val();
+                rfpList.push({'Id': id, 'ProductApproved': qty });
+            });
+
+            rVModel = {
+                "employee": model.employee,
+                "RFHeadReply": rfheadreply,
+                "rfpList": rfpList,
+                "requisitionForm": model.requisitionForm
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/rf/approve/" +@Model.requisitionForm.Id,
+                data: JSON.stringify(rVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r.success == "Success") {
+                        location.href = "/rf/summary";
+                    }
+                    else
+                    {
+                        alert("You must have at least 1 item approved per product");
+                    }
+                }
+            });
+        }
+
+    function Reject() {
+
+            var rVModel;
+            var rfheadreply = $("#rfheadreply").val();
+            var model = @Html.Raw(Json.Serialize(Model));
+            var rfpList = new Array();
+
+            $('.rfpidclass').each(function () {
+                var id = $(this).attr('data-rfpid');
+                var qty = $("#rfproduct_" + id).val();
+                rfpList.push({'Id': id, 'ProductApproved': qty });
+            });
+
+            rVModel = {
+                "employee": model.employee,
+                "RFHeadReply": rfheadreply,
+                "rfpList": rfpList,
+                "requisitionForm": model.requisitionForm
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/rf/reject/" +@Model.requisitionForm.Id,
+                data: JSON.stringify(rVModel),
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function (r) {
+                    if (r.success == "Success") {
+                        location.href = "/rf/summary";
+                    }
+                    else
+                    {
+                        alert("Please input comment before rejecting");
+                    }
+                }
+            });
+        }
+</script>
+}

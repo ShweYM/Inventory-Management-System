@@ -1,0 +1,71 @@
+﻿@{
+    ViewData["Title"] = "Delivery Order Form";
+    Layout = "_Layout";
+}
+@model Inventory_Management_System.ViewModels.PODOViewModel
+@{ 
+    var poList = Model.poListIssued;
+}
+
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+    <h1>@ViewData["Title"]</h1>
+
+    <!--Info of clerk/text fields-->
+    <div>
+        <form id="productForm" action="/do/save">
+            <table id="productTbl" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Purchase Order</th>
+                        <th>Expected Delivery Order Date</th>
+                        @*<th>Supplier's DO Number</th>*@
+
+                    </tr>
+
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var po in poList)
+                        {
+                                        <tr class="product">
+                                            <td><input type="radio" name="poid" class="poselect" data-pid="@po.Id" value="@po.Id"></td>
+                                            <td id="pocode_@po.Id">@po.POCode</td>
+                                            <td>@po.expectedDeliveryDate</td>
+                                            @*<td><input type="text" name="DeliveryOrderNo"></td>*@
+                                        </tr>
+                        }
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4">
+                            <label for="comments">Comments (if any) :</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="4">
+                            <textarea class="form-control" id="comment" name ="DoComments" rows="4"></textarea>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+            <button type="submit" id="submitBtn" class="fadeIn fourth">Submit</button>
+        </form>
+    </div>
+
+</body>
+
+</html>
+

@@ -1,0 +1,9 @@
+﻿Id,EmployeeUsername,RFCode,RFDate,RFStatus,RFComments,RFApprovalDate,RFApprovalUsername,RFHeadReply
+1,darell,RF/STOR/120820/1,12/8/2020 8:40,Submitted,,,,
+2,darell,RF/STOR/120820/2,12/8/2020 9:50,Approved,Urgent,12/8/2020 10:50,rohan,
+3,yanbin,RF/MNGD/100820/1,10/8/2020 10:40,Ongoing,,10/8/2020 17:40,yamone,
+4,yanbin,RF/MNGD/100820/2,10/8/2020 12:31,Completed,,11/8/2020 17:41,yamone,
+5,yanbin,RF/MNGD/100820/3,10/8/2020 16:40,NotCompleted,,12/8/2020 17:50,yamone,
+6,thinn,RF/SCID/120820/1,12/8/2020 11:05,Cancelled,,,darellmgr2,I just wanted to cancel
+7,thinn2,RF/SCID/120820/2,12/8/2020 20:40,Rejected,,13/8/2020 11:30,darellmgr2,I just wanted to reject
+8,arjun,RF/SCID/010820/1,1/8/2020 9:30,Ongoing,,2/8/2020 11:30,darellmgr2,

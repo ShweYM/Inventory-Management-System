@@ -1,0 +1,107 @@
+﻿@model Inventory_Management_System.ViewModels.DelegationViewModel;
+@{
+    Layout = "_Layout";
+    List<Employee> employees = (List<Employee>)ViewData["employees"];
+    var emp = Model.employee;
+    var delegateeList = Model.DeptEmployeeList;
+    var deptHead = Model.DepartmentHead;
+}
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+<body>
+    <form action="/Delegation/SaveTempDeptHead" method="POST">
+        <div class="col-sm-5">
+            <h4>Delegate Department Head</h4>
+            <div class="panel panel-default">
+                <div class="panel-body form-horizontal payment-form">
+                    <div class="form-group">
+                        <label for="concept" class="col-sm-3 control-label">Department Head Name:  </label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="concept" name="concept">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="concept" class="col-sm-3 control-label">Department Head Name: </label>
+                        <div class="col-sm-9">
+                            <button id="dLabel" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Dropdown trigger
+                            </button>
+                            <div class="dropdown-menu" aria-labelledby="dLabel">
+                                @foreach (var delegatee in delegateeList)
+                                {
+                                    <a class="dropdown-item" href="@delegatee.Id">@delegatee.Firstname @delegatee.Lastname</a>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-sm-5">
+            <h4>Delegate Department Head</h4>
+            <div class="panel panel-default">
+                <div class="panel-body form-horizontal payment-form">
+                    <div class="form-group">
+                        <label for="concept" class="col-sm-3 control-label">Start Date: </label>
+                        <div class="col-sm-9">
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" id="startDate" name="concept">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="description" class="col-sm-3 control-label">End Date (Not inclusive on this Date):</label>
+                        <div class="col-sm-9">
+                            <div class="col-sm-9">
+                                <input type="date" class="form-control" id="endDate" name="concept">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+</html>
+
+
+<script>
+    function submit() {
+        $.ajax({
+            url: "/delegationForm",
+            method: "POST",
+            data: {
+                "employeeId": $("employeeId").val(),
+                "startDate": $("startDate").val(),
+                "endDate": $("endDate").val()
+            },
+            success: function (data) {
+                console.log(data);
+                var response = JSON.parse(data);
+                switch (response.result) {
+                    case "invalidDate":
+                        alert("Start date cannot be later than end date");
+                        break;
+                    case "failed":
+                        alert("Failed to add user")
+                        break;
+                    case "success":
+                        window.location.href = "/delegationForm"
+                        break;
+                }
+            }
+        });
+    }
+
+
+</script>
+

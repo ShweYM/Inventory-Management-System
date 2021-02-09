@@ -1,0 +1,111 @@
+﻿@{ ViewData["Title"] = "Requisitions Summary";
+    Layout = "_Layout"; }
+@model Inventory_Management_System.ViewModels.RequisitionSummaryViewModel
+@{ 
+    var empType = @Model.employee.EmployeeType.EmployeeTypeName;
+}
+
+
+
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>@ViewData["Title"] - Inventory Management System</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.21/css/dataTables.bootstrap4.min.css">
+</head>
+
+<body>
+    <h1>Requisition Summary</h1>
+
+    <div class="container mb-3 mt-3">
+        @{
+            if (empType == "Employee" || empType == "Department Representative")
+            {
+                <form action="/rf/apply"><button type="submit">Create Requisition Form</button></form>
+            }
+            
+        }
+
+        <h2>Pending Requisitions</h2>
+
+        <table id="productTbl" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Requisition ID</th>
+                    <th>Requested By</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ for (int i = 0; i < Model.rfListPending.Count; i++)
+                    {
+                        <tr class="product">
+                            <td>@(i+1)</td>
+                            <td>@Model.rfListPending[i].RFCode</td>
+                            <td>@Model.rfListPending[i].Employee.Firstname @Model.rfListPending[i].Employee.Lastname</td>
+                            <td>@Model.rfListPending[i].RFDate</td>
+                            <td>@Model.rfListPending[i].RFStatus.ToString()</td>
+                            @{
+                                if (empType == "Department Head")
+                                {
+                                    <td><a href="/rf/approval/@Model.rfListPending[i].Id">Manage</a></td>
+                                }
+                                else
+                                {
+                                    <td><a href="/rf/@Model.rfListPending[i].Id">More Info</a> | @Html.ActionLink("Cancel", "Cancel", "Requisition", new { id = Model.rfListPending[i].Id })</td>
+                                }
+                            }
+
+                        </tr>
+                    } }
+
+            </tbody>
+        </table>
+        <br />
+        <h2>Processed Requisitions</h2>
+        <table id="productTbl" class="table table-stripped table-bordered RFProducts" style="width: 100%">
+            <thead>
+                <tr>
+                    <th>S/N</th>
+                    <th>Requisition ID</th>
+                    <th>Requested By</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+
+            </thead>
+            <tbody>
+                @{ for (int i = 0; i < Model.rfListProcessed.Count; i++)
+                    {
+                        <tr class="product">
+                            <td>@(i+1)</td>
+                            <td>@Model.rfListProcessed[i].RFCode</td>
+                            <td>@Model.rfListProcessed[i].Employee.Firstname @Model.rfListProcessed[i].Employee.Lastname</td>
+                            <td>@Model.rfListProcessed[i].RFDate</td>
+                            <td>@Model.rfListProcessed[i].RFStatus</td>
+                            <td><a href="/rf/@Model.rfListProcessed[i].Id">More Info</a></td>
+                        </tr>
+                    } }
+
+            </tbody>
+        </table>
+
+    </div>
+
+
+</body>
+
+</html>
+
+
+@section scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -1,0 +1,20 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit http://go.microsoft.com/fwlink/?LinkID=397860
+*@
+
+@model List<ProductCategory>
+
+<div class="row">
+    <div class="col-md-12">
+        @foreach (var pc in Model)
+        {
+
+            <div class="col-md-4">
+                <input type="checkbox" name="deptid" id="dept_id" class="form-check-input dept_list" data-reqid="@pc.ProductCategoryName" value="@pc.ProductCategoryName">@pc.ProductCategoryName
+            </div>
+
+        }
+    </div>
+</div>
+
+<button type="button" onclick="ViewRequisitionCountForDepts()">View Chart</button>
